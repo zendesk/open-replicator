@@ -42,6 +42,7 @@ public class RandEventParser extends AbstractBinlogEventParser {
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
 		final RandEvent event = new RandEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setRandSeed1(is.readLong(8));
 		event.setRandSeed2(is.readLong(8));
 		context.getEventListener().onEvents(event);

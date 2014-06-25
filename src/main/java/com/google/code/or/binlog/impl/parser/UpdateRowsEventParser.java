@@ -56,6 +56,7 @@ public class UpdateRowsEventParser extends AbstractRowEventParser {
 		
 		//
 		final UpdateRowsEvent event = new UpdateRowsEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);
 		event.setReserved(is.readInt(2));
 		event.setColumnCount(is.readUnsignedLong()); 

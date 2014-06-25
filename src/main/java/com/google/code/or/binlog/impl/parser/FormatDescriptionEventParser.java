@@ -42,6 +42,7 @@ public class FormatDescriptionEventParser extends AbstractBinlogEventParser {
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
 		final FormatDescriptionEvent event = new FormatDescriptionEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setBinlogVersion(is.readInt(2));
 		event.setServerVersion(is.readFixedLengthString(50));
 		event.setCreateTimestamp(is.readLong(4) * 1000L);

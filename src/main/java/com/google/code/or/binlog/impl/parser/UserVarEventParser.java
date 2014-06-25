@@ -53,6 +53,7 @@ public class UserVarEventParser extends AbstractBinlogEventParser {
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
 		final UserVarEvent event = new UserVarEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setVarNameLength(is.readInt(4));
 		event.setVarName(is.readFixedLengthString(event.getVarNameLength()));
 		event.setIsNull(is.readInt(1));

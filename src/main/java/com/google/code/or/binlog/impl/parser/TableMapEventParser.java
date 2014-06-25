@@ -61,12 +61,14 @@ public class TableMapEventParser extends AbstractBinlogEventParser {
 			is.skip(is.available());
 			final TableMapEvent event = context.getTableMapEvent(tableId).copy();
 			event.setHeader(header);
+			event.setBinlogFilename(context.getBinlogFileName());
 			context.getEventListener().onEvents(event);
 			return;
 		}
 		
 		//
 		final TableMapEvent event = new TableMapEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);
 		event.setReserved(is.readInt(2));
 		event.setDatabaseNameLength(is.readInt(1));

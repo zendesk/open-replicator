@@ -43,6 +43,7 @@ public class IntvarEventParser extends AbstractBinlogEventParser {
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
 		final IntvarEvent event = new IntvarEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setType(is.readInt(1));
 		event.setValue(UnsignedLong.valueOf(is.readLong(8)));
 		context.getEventListener().onEvents(event);

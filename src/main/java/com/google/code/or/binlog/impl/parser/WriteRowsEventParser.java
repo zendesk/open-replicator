@@ -55,6 +55,7 @@ public class WriteRowsEventParser extends AbstractRowEventParser {
 		
 		//
 		final WriteRowsEvent event = new WriteRowsEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);
 		event.setReserved(is.readInt(2));
 		event.setColumnCount(is.readUnsignedLong()); 

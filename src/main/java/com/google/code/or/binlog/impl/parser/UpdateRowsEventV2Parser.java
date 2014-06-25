@@ -56,6 +56,7 @@ public class UpdateRowsEventV2Parser extends AbstractRowEventParser {
 		
 		//
 		final UpdateRowsEventV2 event = new UpdateRowsEventV2(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);
 		event.setReserved(is.readInt(2));
 		event.setExtraInfoLength(is.readInt(2));
