@@ -28,20 +28,20 @@ import com.google.code.or.common.glossary.Row;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class DeleteRowsEventParser extends AbstractRowEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public DeleteRowsEventParser() {
 		super(DeleteRowsEvent.EVENT_TYPE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -52,19 +52,20 @@ public class DeleteRowsEventParser extends AbstractRowEventParser {
 			is.skip(is.available());
 			return;
 		}
-		
+
 		//
 		final DeleteRowsEvent event = new DeleteRowsEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);
 		event.setReserved(is.readInt(2));
-		event.setColumnCount(is.readUnsignedLong()); 
+		event.setColumnCount(is.readUnsignedLong());
 		event.setUsedColumns(is.readBit(event.getColumnCount().intValue()));
 		event.setRows(parseRows(is, tme, event));
 		context.getEventListener().onEvents(event);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected List<Row> parseRows(XInputStream is, TableMapEvent tme, DeleteRowsEvent dre)
 	throws IOException {
