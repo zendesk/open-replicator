@@ -2,17 +2,41 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>open-replicator</groupId>
+  <groupId>com.zendesk</groupId>
   <artifactId>open-replicator</artifactId>
-  <version>1.0.7</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
 
   <name>open-replicator</name>
-  <url>http://code.google.com/p/open-replicator/</url>
+  <description>Open Replicator is a high performance MySQL binlog parser written in Java.</description>
+  <url>https://github.com/zendesk/open-replicator</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Ben Osheroff</name>
+      <email>ben@zendesk.com</email>
+      <organization>Zendesk</organization>
+      <organizationUrl>http://www.zendesk.com</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:zendesk/open-replicator.git</connection>
+    <developerConnection>scm:git:git@github.com:zendesk/open-replicator.git</developerConnection>
+    <url>git@github.com:zendesk/open-replicator.git</url>
+  </scm>
 
   <dependencies>
     <dependency>
@@ -22,16 +46,68 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-api</artifactId>
-		<version>1.7.5</version>
-	</dependency>
-    <dependency>
-    	<groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-classic</artifactId>
-    	<version>1.1.2</version>
-    	<scope>test</scope>
-    </dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.5</version>
+	  </dependency>
   </dependencies>
-  <description>Open Replicator is a high performance MySQL binlog parser written in Java.</description>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.3</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
