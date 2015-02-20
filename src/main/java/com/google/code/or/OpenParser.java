@@ -40,7 +40,7 @@ import com.google.code.or.binlog.impl.parser.WriteRowsEventV2Parser;
 import com.google.code.or.binlog.impl.parser.XidEventParser;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class OpenParser {
@@ -49,25 +49,25 @@ public class OpenParser {
 	protected long startPosition;
 	protected String binlogFileName;
 	protected String binlogFilePath;
-	
+
 	//
 	protected BinlogParser binlogParser;
 	protected BinlogEventListener binlogEventListener;
 	protected final AtomicBoolean running = new AtomicBoolean(false);
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public boolean isRunning() {
 		return this.running.get();
 	}
-	
+
 	public void start() throws Exception {
 		//
 		if(!this.running.compareAndSet(false, true)) {
 			return;
 		}
-		
+
 		//
 		if(this.binlogParser == null) this.binlogParser = getDefaultBinlogParser();
 		this.binlogParser.setEventListener(this.binlogEventListener);
@@ -79,22 +79,22 @@ public class OpenParser {
 		if(!this.running.compareAndSet(true, false)) {
 			return;
 		}
-		
+
 		//
 		this.binlogParser.stop(timeout, unit);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getStopPosition() {
 		return stopPosition;
 	}
-	
+
 	public void setStopPosition(long position) {
 		this.stopPosition = position;
 	}
-	
+
 	public long getStartPosition() {
 		return startPosition;
 	}
@@ -106,7 +106,7 @@ public class OpenParser {
 	public String getBinlogFileName() {
 		return binlogFileName;
 	}
-	
+
 	public void setBinlogFileName(String name) {
 		this.binlogFileName = name;
 	}
@@ -120,7 +120,7 @@ public class OpenParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public BinlogParser getBinlogParser() {
 		return binlogParser;
@@ -129,7 +129,7 @@ public class OpenParser {
 	public void setBinlogParser(BinlogParser parser) {
 		this.binlogParser = parser;
 	}
-	
+
 	public BinlogEventListener getBinlogEventListener() {
 		return binlogEventListener;
 	}
@@ -139,28 +139,28 @@ public class OpenParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected FileBasedBinlogParser getDefaultBinlogParser() throws Exception {
 		//
 		final FileBasedBinlogParser r = new FileBasedBinlogParser();
-		r.registgerEventParser(new StopEventParser());
-		r.registgerEventParser(new RotateEventParser());
-		r.registgerEventParser(new IntvarEventParser());
-		r.registgerEventParser(new XidEventParser());
-		r.registgerEventParser(new RandEventParser());
-		r.registgerEventParser(new QueryEventParser());
-		r.registgerEventParser(new UserVarEventParser());
-		r.registgerEventParser(new IncidentEventParser());
-		r.registgerEventParser(new TableMapEventParser());
-		r.registgerEventParser(new WriteRowsEventParser());
-		r.registgerEventParser(new UpdateRowsEventParser());
-		r.registgerEventParser(new DeleteRowsEventParser());
-		r.registgerEventParser(new WriteRowsEventV2Parser());
-		r.registgerEventParser(new UpdateRowsEventV2Parser());
-		r.registgerEventParser(new DeleteRowsEventV2Parser());
-		r.registgerEventParser(new FormatDescriptionEventParser());
-		
+		r.registerEventParser(new StopEventParser());
+		r.registerEventParser(new RotateEventParser());
+		r.registerEventParser(new IntvarEventParser());
+		r.registerEventParser(new XidEventParser());
+		r.registerEventParser(new RandEventParser());
+		r.registerEventParser(new QueryEventParser());
+		r.registerEventParser(new UserVarEventParser());
+		r.registerEventParser(new IncidentEventParser());
+		r.registerEventParser(new TableMapEventParser());
+		r.registerEventParser(new WriteRowsEventParser());
+		r.registerEventParser(new UpdateRowsEventParser());
+		r.registerEventParser(new DeleteRowsEventParser());
+		r.registerEventParser(new WriteRowsEventV2Parser());
+		r.registerEventParser(new UpdateRowsEventV2Parser());
+		r.registerEventParser(new DeleteRowsEventV2Parser());
+		r.registerEventParser(new FormatDescriptionEventParser());
+
 		//
 		r.setStopPosition(this.stopPosition);
 		r.setStartPosition(this.startPosition);

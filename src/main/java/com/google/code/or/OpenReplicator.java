@@ -50,7 +50,7 @@ import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.command.ComBinlogDumpPacket;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class OpenReplicator {
@@ -66,33 +66,33 @@ public class OpenReplicator {
 	protected int level1BufferSize = 1024 * 1024;
 	protected int level2BufferSize = 8 * 1024 * 1024;
 	protected int socketReceiveBufferSize = 512 * 1024;
-	
+
 	//
 	protected Transport transport;
 	protected BinlogParser binlogParser;
 	protected BinlogEventListener binlogEventListener;
 	protected final AtomicBoolean running = new AtomicBoolean(false);
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public boolean isRunning() {
 		return this.running.get();
 	}
-	
+
 	public void start() throws Exception {
 		//
 		if(!this.running.compareAndSet(false, true)) {
 			return;
 		}
-		
+
 		//
 		if(this.transport == null) this.transport = getDefaultTransport();
 		this.transport.connect(this.host, this.port);
-		
+
 		//
 		dumpBinlog();
-		
+
 		//
 		if(this.binlogParser == null) this.binlogParser = getDefaultBinlogParser();
 		this.binlogParser.setEventListener(this.binlogEventListener);
@@ -110,12 +110,12 @@ public class OpenReplicator {
 		if(!this.running.compareAndSet(true, false)) {
 			return;
 		}
-		
+
 		//
 		this.transport.disconnect();
 		this.binlogParser.stop(timeout, unit);
 	}
-	
+
 	public void stopQuietly(long timeout, TimeUnit unit) {
 		try {
 			stop(timeout, unit);
@@ -123,9 +123,9 @@ public class OpenReplicator {
 			// NOP
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getPort() {
 		return port;
@@ -158,7 +158,7 @@ public class OpenReplicator {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getEncoding() {
 		return encoding;
 	}
@@ -166,7 +166,7 @@ public class OpenReplicator {
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
-	
+
 	public int getServerId() {
 		return serverId;
 	}
@@ -174,7 +174,7 @@ public class OpenReplicator {
 	public void setServerId(int serverId) {
 		this.serverId = serverId;
 	}
-	
+
 	public long getBinlogPosition() {
 		return binlogPosition;
 	}
@@ -182,7 +182,7 @@ public class OpenReplicator {
 	public void setBinlogPosition(long binlogPosition) {
 		this.binlogPosition = binlogPosition;
 	}
-	
+
 	public String getBinlogFileName() {
 		return binlogFileName;
 	}
@@ -190,7 +190,7 @@ public class OpenReplicator {
 	public void setBinlogFileName(String binlogFileName) {
 		this.binlogFileName = binlogFileName;
 	}
-	
+
 	public int getLevel1BufferSize() {
 		return level1BufferSize;
 	}
@@ -206,7 +206,7 @@ public class OpenReplicator {
 	public void setLevel2BufferSize(int level2BufferSize) {
 		this.level2BufferSize = level2BufferSize;
 	}
-	
+
 	public int getSocketReceiveBufferSize() {
 		return socketReceiveBufferSize;
 	}
@@ -216,7 +216,7 @@ public class OpenReplicator {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Transport getTransport() {
 		return transport;
@@ -225,7 +225,7 @@ public class OpenReplicator {
 	public void setTransport(Transport transport) {
 		this.transport = transport;
 	}
-	
+
 	public BinlogParser getBinlogParser() {
 		return binlogParser;
 	}
@@ -233,7 +233,7 @@ public class OpenReplicator {
 	public void setBinlogParser(BinlogParser parser) {
 		this.binlogParser = parser;
 	}
-	
+
 	public BinlogEventListener getBinlogEventListener() {
 		return binlogEventListener;
 	}
@@ -243,7 +243,7 @@ public class OpenReplicator {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void dumpBinlog() throws Exception {
 		//
@@ -254,28 +254,28 @@ public class OpenReplicator {
 		command.setBinlogFileName(StringColumn.valueOf(this.binlogFileName.getBytes(this.encoding)));
 		this.transport.getOutputStream().writePacket(command);
 		this.transport.getOutputStream().flush();
-		
+
 		//
 		final Packet packet = this.transport.getInputStream().readPacket();
 		if(packet.getPacketBody()[0] == ErrorPacket.PACKET_MARKER) {
 			final ErrorPacket error = ErrorPacket.valueOf(packet);
 			throw new TransportException(error);
-		} 
+		}
 	}
-	
+
 	protected Transport getDefaultTransport() throws Exception {
 		//
 		final TransportImpl r = new TransportImpl();
 		r.setLevel1BufferSize(this.level1BufferSize);
 		r.setLevel2BufferSize(this.level2BufferSize);
-		
+
 		//
 		final AuthenticatorImpl authenticator = new AuthenticatorImpl();
 		authenticator.setUser(this.user);
 		authenticator.setPassword(this.password);
 		authenticator.setEncoding(this.encoding);
 		r.setAuthenticator(authenticator);
-		
+
 		//
 		final SocketFactoryImpl socketFactory = new SocketFactoryImpl();
 		socketFactory.setKeepAlive(true);
@@ -284,27 +284,27 @@ public class OpenReplicator {
 		r.setSocketFactory(socketFactory);
 		return r;
 	}
-	
+
 	protected ReplicationBasedBinlogParser getDefaultBinlogParser() throws Exception {
 		//
 		final ReplicationBasedBinlogParser r = new ReplicationBasedBinlogParser();
-		r.registgerEventParser(new StopEventParser());
-		r.registgerEventParser(new RotateEventParser());
-		r.registgerEventParser(new IntvarEventParser());
-		r.registgerEventParser(new XidEventParser());
-		r.registgerEventParser(new RandEventParser());
-		r.registgerEventParser(new QueryEventParser());
-		r.registgerEventParser(new UserVarEventParser());
-		r.registgerEventParser(new IncidentEventParser());
-		r.registgerEventParser(new TableMapEventParser());
-		r.registgerEventParser(new WriteRowsEventParser());
-		r.registgerEventParser(new UpdateRowsEventParser());
-		r.registgerEventParser(new DeleteRowsEventParser());
-		r.registgerEventParser(new WriteRowsEventV2Parser());
-		r.registgerEventParser(new UpdateRowsEventV2Parser());
-		r.registgerEventParser(new DeleteRowsEventV2Parser());
-		r.registgerEventParser(new FormatDescriptionEventParser());
-		
+		r.registerEventParser(new StopEventParser());
+		r.registerEventParser(new RotateEventParser());
+		r.registerEventParser(new IntvarEventParser());
+		r.registerEventParser(new XidEventParser());
+		r.registerEventParser(new RandEventParser());
+		r.registerEventParser(new QueryEventParser());
+		r.registerEventParser(new UserVarEventParser());
+		r.registerEventParser(new IncidentEventParser());
+		r.registerEventParser(new TableMapEventParser());
+		r.registerEventParser(new WriteRowsEventParser());
+		r.registerEventParser(new UpdateRowsEventParser());
+		r.registerEventParser(new DeleteRowsEventParser());
+		r.registerEventParser(new WriteRowsEventV2Parser());
+		r.registerEventParser(new UpdateRowsEventV2Parser());
+		r.registerEventParser(new DeleteRowsEventV2Parser());
+		r.registerEventParser(new FormatDescriptionEventParser());
+
 		//
 		r.setTransport(this.transport);
 		r.setBinlogFileName(this.binlogFileName);
