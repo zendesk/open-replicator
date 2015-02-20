@@ -16,6 +16,7 @@
  */
 package com.google.code.or.binlog.impl;
 
+import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -256,6 +257,7 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 		public void run() {
 			try {
 				doParse();
+			} catch (EOFException e) {
 			} catch (Exception e) {
 				notifyOnException(e);
 				LOGGER.error("failed to parse binlog", e);

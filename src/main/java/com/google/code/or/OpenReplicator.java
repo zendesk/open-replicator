@@ -111,8 +111,10 @@ public class OpenReplicator {
 			return;
 		}
 
-		//
+		// disconnect the transport first: seems kinda wrong, but the parser thread can be blocked waiting for the
+		// last event, and doesn't have any timeouts.  so we deal with the EOF exception thrown elsewhere in the code.
 		this.transport.disconnect();
+
 		this.binlogParser.stop(timeout, unit);
 	}
 
