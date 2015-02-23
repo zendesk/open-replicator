@@ -45,7 +45,7 @@ import com.google.code.or.io.XInputStream;
 import com.google.code.or.io.util.XDeserializer;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QueryEventParser extends AbstractBinlogEventParser {
@@ -53,18 +53,19 @@ public class QueryEventParser extends AbstractBinlogEventParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(QueryEventParser.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public QueryEventParser() {
 		super(QueryEvent.EVENT_TYPE);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
 		final QueryEvent event = new QueryEvent(header);
+		event.setBinlogFilename(context.getBinlogFileName());
 		event.setThreadId(is.readLong(4));
 		event.setElapsedTime(is.readLong(4));
 		event.setDatabaseNameLength(is.readInt(1));
@@ -77,9 +78,9 @@ public class QueryEventParser extends AbstractBinlogEventParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	protected List<StatusVariable> parseStatusVariables(byte[] data) 
+	protected List<StatusVariable> parseStatusVariables(byte[] data)
 	throws IOException {
 		final List<StatusVariable> r = new ArrayList<StatusVariable>();
 		final XDeserializer d = new XDeserializer(data);
