@@ -17,6 +17,7 @@
 package com.google.code.or.common.glossary.column;
 
 import com.google.code.or.common.glossary.Column;
+import com.google.code.or.common.util.MySQLUtils;
 
 /**
  * 
@@ -28,14 +29,20 @@ public final class DatetimeColumn implements Column {
 	
 	//
 	private final java.util.Date value;
-	
+	private long longValue;
+
 	/**
 	 * 
 	 */
 	private DatetimeColumn(java.util.Date value) {
 		this.value = value;
 	}
-	
+
+	private DatetimeColumn(long value) {
+		this.longValue = value;
+		this.value = MySQLUtils.toDatetime(value);
+	}
+
 	/**
 	 * 
 	 */
@@ -50,11 +57,20 @@ public final class DatetimeColumn implements Column {
 	public java.util.Date getValue() {
 		return this.value;
 	}
-	
+
+	public long getLongValue() {
+		return this.longValue;
+	}
+
+
 	/**
 	 * 
 	 */
 	public static final DatetimeColumn valueOf(java.util.Date value) {
+		return new DatetimeColumn(value);
+	}
+
+	public static final DatetimeColumn valueOf(long value) {
 		return new DatetimeColumn(value);
 	}
 }
