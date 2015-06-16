@@ -95,6 +95,15 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 			}
 		} catch(IOException e) {
 			this.exception = e;
+			LOGGER.error("caught IOException, locking and notifying");
+
+			this.lock.lock();
+			try {
+				this.bufferNotFull.signalAll();
+				this.bufferNotEmpty.signalAll();
+			} finally {
+	        	this.lock.unlock();
+	        }
 		} catch(Exception e) {
 			LOGGER.error("failed to transfer data", e);
 		}
