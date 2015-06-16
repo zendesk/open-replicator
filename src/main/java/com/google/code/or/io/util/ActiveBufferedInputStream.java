@@ -95,7 +95,6 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 			}
 		} catch(IOException e) {
 			this.exception = e;
-			LOGGER.error("caught IOException, locking and notifying");
 
 			this.lock.lock();
 			try {
