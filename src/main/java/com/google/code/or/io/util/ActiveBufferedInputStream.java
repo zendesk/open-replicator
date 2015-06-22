@@ -30,16 +30,16 @@ import org.slf4j.LoggerFactory;
 import com.google.code.or.common.util.XThreadFactory;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class ActiveBufferedInputStream extends InputStream implements Runnable {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActiveBufferedInputStream.class);
-	
+
 	//
 	private static final int DEFAULT_CAPACITY = 2 * 1024 * 1024;
-	
+
 	//
 	private final Thread worker;
 	private final InputStream is;
@@ -50,32 +50,32 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 	private final AtomicBoolean closed = new AtomicBoolean(false);
 	private final Condition bufferNotFull = this.lock.newCondition();
 	private final Condition bufferNotEmpty = this.lock.newCondition();
-	
+
 
 	/**
-	 * 
+	 *
 	 */
 	public ActiveBufferedInputStream(InputStream is) {
 		this(is, DEFAULT_CAPACITY);
 	}
-	
+
 	public ActiveBufferedInputStream(InputStream is, int size) {
 		this(is, size, new XThreadFactory("active-bis", true));
 	}
-	
+
 	public ActiveBufferedInputStream(InputStream is, int size, ThreadFactory tf) {
 		//
 		this.is = is;
 		this.threadFactory = tf;
 		this.ringBuffer = new ByteRingBuffer(size);
-		
+
 		//
 		this.worker = this.threadFactory.newThread(this);
 		this.worker.start();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void run() {
 		try {
@@ -84,7 +84,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 				//
 				int r = this.is.read(buffer, 0, buffer.length);
 				if(r < 0) throw new EOFException();
-				
+
 				//
 				int offset = 0;
 				while(r > 0) {
@@ -107,22 +107,22 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 			LOGGER.error("failed to transfer data", e);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public int available() throws IOException {
 		return this.ringBuffer.size();
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		//
 		if(!this.closed.compareAndSet(false, true)) {
 			return;
 		}
-		
+
 		//
 		try {
 			this.is.close();
@@ -136,7 +136,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 	        }
 		}
 	}
-	
+
 	@Override
 	public int read() throws IOException {
 		this.lock.lock();
@@ -147,7 +147,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
             	this.bufferNotEmpty.awaitUninterruptibly();
             	if(this.closed.get()) throw new EOFException();
             }
-            
+
         	//
         	final int r = this.ringBuffer.read();
         	this.bufferNotFull.signal();
@@ -156,7 +156,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
         	this.lock.unlock();
         }
 	}
-	
+
 	@Override
 	public int read(byte b[], int off, int len) throws IOException {
 		this.lock.lock();
@@ -167,7 +167,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
             	this.bufferNotEmpty.awaitUninterruptibly();
             	if(this.closed.get()) throw new EOFException();
             }
-            
+
             //
         	final int r = this.ringBuffer.read(b, off, len);
         	this.bufferNotFull.signal();
@@ -176,7 +176,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
         	this.lock.unlock();
         }
 	}
-	
+
 	public int write(byte b[], int off, int len) throws IOException {
 		this.lock.lock();
         try {
@@ -185,7 +185,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
             	this.bufferNotFull.awaitUninterruptibly();
             	if(this.closed.get()) throw new EOFException();
             }
-            
+
             //
         	final int w = this.ringBuffer.write(b, off, len);
         	this.bufferNotEmpty.signal();
@@ -194,9 +194,9 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
         	this.lock.unlock();
         }
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private final class ByteRingBuffer {
 		//
@@ -204,16 +204,16 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 		private int head; // Write
 		private int tail; // Read
 		private final byte[] buffer;
-		
+
 		/**
-		 * 
+		 *
 		 */
 		public ByteRingBuffer(int capacity) {
 			this.buffer = new byte[capacity];
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		public int size() {
 			return this.size;
@@ -222,24 +222,24 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 		public boolean isEmpty() {
 			return this.size == 0;
 		}
-		
+
 		public boolean isFull() {
 			return this.size == this.buffer.length;
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		public int read() {
 			//
 			final int r = this.buffer[this.tail] & 0xFF;
-			
+
 			//
 	    	this.tail = (this.tail + 1) % this.buffer.length;
 	    	this.size -= 1;
 	    	return r;
 		}
-		
+
 		public int read(byte b[], int off, int len) {
 			//
 			final int r = Math.min(this.size, len);
@@ -250,13 +250,13 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 	    		System.arraycopy(this.buffer, this.tail, b, off, r1);
 	    		if(r1 < r) System.arraycopy(this.buffer, 0, b, off + r1, r - r1);
 	    	}
-	    	
+
 	    	//
 	    	this.tail = (this.tail + r) % this.buffer.length;
 	    	this.size -= r;
 	    	return r;
 		}
-		
+
 		public int write(byte b[], int off, int len) {
 			//
 			final int w = Math.min(this.buffer.length - this.size, len);
@@ -267,7 +267,7 @@ public final class ActiveBufferedInputStream extends InputStream implements Runn
 	    		System.arraycopy(b, off, this.buffer, this.head, w1);
 	    		if(w1 < w) System.arraycopy(b, off + w1, this.buffer, 0, w - w1);
 	    	}
-	    	
+
 	    	//
 	    	this.head = (this.head + w) % this.buffer.length;
 	    	this.size += w;

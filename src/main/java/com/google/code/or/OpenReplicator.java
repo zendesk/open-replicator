@@ -69,7 +69,7 @@ public class OpenReplicator {
 
 	//
 	protected Transport transport;
-	protected BinlogParser binlogParser;
+	protected ReplicationBasedBinlogParser binlogParser;
 	protected BinlogEventListener binlogEventListener;
 	protected final AtomicBoolean running = new AtomicBoolean(false);
 
@@ -94,7 +94,11 @@ public class OpenReplicator {
 		dumpBinlog();
 
 		//
-		if(this.binlogParser == null) this.binlogParser = getDefaultBinlogParser();
+		if(this.binlogParser == null)
+			this.binlogParser = getDefaultBinlogParser();
+
+		this.binlogParser.setBinlogFileName(this.binlogFileName);
+
 		this.binlogParser.setEventListener(this.binlogEventListener);
 		this.binlogParser.addParserListener(new BinlogParserListener.Adapter() {
 			@Override
@@ -232,7 +236,7 @@ public class OpenReplicator {
 		return binlogParser;
 	}
 
-	public void setBinlogParser(BinlogParser parser) {
+	public void setBinlogParser(ReplicationBasedBinlogParser parser) {
 		this.binlogParser = parser;
 	}
 
@@ -309,7 +313,6 @@ public class OpenReplicator {
 
 		//
 		r.setTransport(this.transport);
-		r.setBinlogFileName(this.binlogFileName);
 		return r;
 	}
 }
