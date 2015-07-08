@@ -18,26 +18,30 @@ package com.google.code.or.binlog.impl.parser;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.code.or.binlog.BinlogEventV4Header;
 import com.google.code.or.binlog.BinlogParserContext;
 import com.google.code.or.binlog.impl.event.FormatDescriptionEvent;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class FormatDescriptionEventParser extends AbstractBinlogEventParser {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(FormatDescriptionEventParser.class);
 	/**
-	 * 
+	 *
 	 */
 	public FormatDescriptionEventParser() {
 		super(FormatDescriptionEvent.EVENT_TYPE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -48,6 +52,7 @@ public class FormatDescriptionEventParser extends AbstractBinlogEventParser {
 		event.setCreateTimestamp(is.readLong(4) * 1000L);
 		event.setHeaderLength(is.readInt(1));
 		event.setEventTypes(is.readBytes(is.available()));
+		LOGGER.info("format_description_event: " + event.toString() + " checksum enabled: " + event.checksumEnabled());
 		context.getEventListener().onEvents(event);
 	}
 }

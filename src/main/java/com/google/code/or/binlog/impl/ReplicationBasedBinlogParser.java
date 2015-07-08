@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.code.or.binlog.BinlogEventParser;
 import com.google.code.or.binlog.impl.event.BinlogEventV4HeaderImpl;
+import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.io.XInputStream;
 import com.google.code.or.net.Transport;
 import com.google.code.or.net.impl.packet.EOFPacket;
@@ -30,24 +31,23 @@ import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.OKPacket;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReplicationBasedBinlogParser.class);
-	
+
 	//
 	protected Transport transport;
-	protected String binlogFileName;
-	
+
 
 	/**
-	 * 
+	 *
 	 */
 	public ReplicationBasedBinlogParser() {
 	}
-	
+
 	@Override
 	protected void doStart() throws Exception {
 		// NOP
@@ -57,9 +57,9 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	protected void doStop(long timeout, TimeUnit unit) throws Exception {
 		// NOP
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Transport getTransport() {
 		return transport;
@@ -68,7 +68,8 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	public void setTransport(Transport transport) {
 		this.transport = transport;
 	}
-	
+
+	@Override
 	public String getBinlogFileName() {
 		return binlogFileName;
 	}
@@ -78,20 +79,21 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	protected void doParse() throws Exception {
 		//
 		final XInputStream is = this.transport.getInputStream();
-		final Context context = new Context(this.binlogFileName);
+		final Context context = new Context(this);
 		while(isRunning()) {
 			try {
 				// Parse packet
-				final int packetLength = is.readInt(3);
+				final int packetLength = is.readInt(3) - 4;
 				final int packetSequence = is.readInt(1);
+
 				is.setReadLimit(packetLength); // Ensure the packet boundary
-				
+
 				//
 				final int packetMarker = is.readInt(1);
 				if(packetMarker != OKPacket.PACKET_MARKER) { // 0x00
@@ -105,7 +107,7 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 						throw new RuntimeException("assertion failed, invalid packet marker: " + packetMarker);
 					}
 				}
-				
+
 				// Parse the event header
 				final BinlogEventV4HeaderImpl header = new BinlogEventV4HeaderImpl();
 				header.setTimestamp(is.readLong(4) * 1000L);
@@ -118,7 +120,7 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				if(isVerbose() && LOGGER.isInfoEnabled()) {
 					LOGGER.info("received an event, sequence: {}, header: {}", packetSequence, header);
 				}
-				
+
 				// Parse the event body
 				if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
 					this.defaultParser.parse(is, header, context);
@@ -127,7 +129,21 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 					if(parser == null) parser = this.defaultParser;
 					parser.parse(is, header, context);
 				}
-				
+
+
+				if ( true ) {
+                    is.setReadLimit(4);
+					Long checksum = is.readLong(4);
+					LOGGER.info("checksum: {} header: {}", checksum, header);
+				} else {
+					LOGGER.info("no checksum available for {}", header);
+				}
+//				if ( this.checksumEvents &&
+//						header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT  &&
+//						header.getEventType() != MySQLConstants.XID_EVENT &&
+//						header.getEventType() != MySQLConstants.XID_EVENT  ) {
+//				}
+
 				// Ensure the packet boundary
 				if(is.available() != 0) {
 					throw new RuntimeException("assertion failed, available: " + is.available() + ", event type: " + header.getEventType());

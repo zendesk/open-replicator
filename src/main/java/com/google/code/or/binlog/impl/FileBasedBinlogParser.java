@@ -32,13 +32,13 @@ import com.google.code.or.io.impl.XInputStreamImpl;
 import com.google.code.or.io.util.RamdomAccessFileInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class FileBasedBinlogParser extends AbstractBinlogParser {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileBasedBinlogParser.class);
-	
+
 	//
 	protected XInputStream is;
 	protected String binlogFileName;
@@ -46,13 +46,13 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	protected long stopPosition = 0;
 	protected long startPosition = 4;
 
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public FileBasedBinlogParser() {
 	}
-	
+
 	@Override
 	protected void doStart() throws Exception {
 		this.is = open(this.binlogFilePath + "/" +  this.binlogFileName);
@@ -62,14 +62,10 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	protected void doStop(long timeout, TimeUnit unit) throws Exception {
 		IOUtils.closeQuietly(this.is);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
-	public String getBinlogFileName() {
-		return binlogFileName;
-	}
-	
 	public void setBinlogFileName(String name) {
 		this.binlogFileName = name;
 	}
@@ -81,15 +77,15 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	public void setBinlogFilePath(String path) {
 		this.binlogFilePath = path;
 	}
-	
+
 	public long getStopPosition() {
 		return stopPosition;
 	}
-	
+
 	public void setStopPosition(long stopPosition) {
 		this.stopPosition = stopPosition;
 	}
-	
+
 	public long getStartPosition() {
 		return startPosition;
 	}
@@ -97,14 +93,14 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	public void setStartPosition(long startPosition) {
 		this.startPosition = startPosition;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	protected void doParse() throws Exception {
 		//
-		final Context context = new Context(this.binlogFileName);
+		final Context context = new Context(this);
 		while(isRunning() && is.available() > 0) {
 			try {
 				//
@@ -120,12 +116,12 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 				if(isVerbose() && LOGGER.isInfoEnabled()) {
 					LOGGER.info("read an event, header: {}", header);
 				}
-				
+
 				//
 				if(this.stopPosition > 0 && header.getPosition() > this.stopPosition) {
 					break;
 				}
-				
+
 				// Parse the event body
 				if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
 					this.defaultParser.parse(is, header, context);
@@ -134,7 +130,7 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 					if(parser == null) parser = this.defaultParser;
 					parser.parse(is, header, context);
 				}
-				
+
 				// Ensure the packet boundary
 				if(is.available() != 0) {
 					throw new RuntimeException("assertion failed, available: " + is.available() + ", event type: " + header.getEventType());
@@ -149,7 +145,7 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected XInputStream open(String path) throws Exception {
 		//
@@ -160,7 +156,7 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 			if(!CodecUtils.equals(magic, MySQLConstants.BINLOG_MAGIC)) {
 				throw new RuntimeException("invalid binlog magic, file: " + path);
 			}
-			
+
 			//
 			if(this.startPosition > MySQLConstants.BINLOG_MAGIC.length) {
 				is.skip(this.startPosition - MySQLConstants.BINLOG_MAGIC.length);

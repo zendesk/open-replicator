@@ -55,11 +55,14 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 	protected BinlogEventFilter eventFilter;
 	protected BinlogEventListener eventListener;
 	protected boolean clearTableMapEventsOnRotate = true;
+	protected boolean checksumEvents = false;
+
 	protected final List<BinlogParserListener> parserListeners;
 	protected final AtomicBoolean verbose = new AtomicBoolean(false);
 	protected final AtomicBoolean running = new AtomicBoolean(false);
 	protected final BinlogEventParser defaultParser = new NopEventParser();
 	protected final BinlogEventParser[] parsers = new BinlogEventParser[128];
+	protected String binlogFileName;
 
 	//
 	protected abstract void doParse() throws Exception;
@@ -196,7 +199,12 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 		return unregisterEventParser(type);
 	}
 
-
+	public boolean getChecksumEvents() {
+		return checksumEvents;
+	}
+	public void setChecksumEvents(boolean checksumEvents) {
+		this.checksumEvents = checksumEvents;
+	}
 
 
 	public void setEventParsers(List<BinlogEventParser> parsers) {
@@ -227,6 +235,11 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 		this.parserListeners.clear();
 		if(listeners != null) this.parserListeners.addAll(listeners);
 	}
+
+	public String getBinlogFileName() {
+		return binlogFileName;
+	}
+
 
 	/**
 	 *
@@ -279,11 +292,10 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 		/**
 		 *
 		 */
-		public Context() {
-		}
 
-		public Context(String binlogFileName) {
-			this.binlogFileName = binlogFileName;
+		public Context(AbstractBinlogParser parser) {
+			this.binlogFileName = parser.getBinlogFileName();
+
 		}
 
 		/**

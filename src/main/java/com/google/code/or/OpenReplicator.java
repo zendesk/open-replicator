@@ -16,8 +16,12 @@
  */
 package com.google.code.or;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.code.or.binlog.BinlogEventListener;
 import com.google.code.or.binlog.BinlogParser;
@@ -45,6 +49,7 @@ import com.google.code.or.net.Packet;
 import com.google.code.or.net.Transport;
 import com.google.code.or.net.TransportException;
 import com.google.code.or.net.impl.AuthenticatorImpl;
+import com.google.code.or.net.impl.Query;
 import com.google.code.or.net.impl.TransportImpl;
 import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.command.ComBinlogDumpPacket;
@@ -73,6 +78,7 @@ public class OpenReplicator {
 	protected BinlogEventListener binlogEventListener;
 	protected final AtomicBoolean running = new AtomicBoolean(false);
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenReplicator.class);
 	/**
 	 *
 	 */
@@ -91,11 +97,11 @@ public class OpenReplicator {
 		this.transport.connect(this.host, this.port);
 
 		//
-		dumpBinlog();
-
-		//
 		if(this.binlogParser == null)
 			this.binlogParser = getDefaultBinlogParser();
+
+		setupChecksumState();
+		dumpBinlog();
 
 		this.binlogParser.setBinlogFileName(this.binlogFileName);
 
@@ -248,6 +254,16 @@ public class OpenReplicator {
 		this.binlogEventListener = listener;
 	}
 
+	protected void setupChecksumState() throws Exception {
+		final Query query = new Query(this.transport);
+
+		List<String> cols = query.getFirst("SELECT @@global.binlog_checksum");
+
+		if ( cols != null && cols.get(0).equals("CRC32") ) {
+			this.binlogParser.setChecksumEvents(true);
+			query.getFirst("SET @master_binlog_checksum = @@global.binlog_checksum");
+		}
+	}
 	/**
 	 *
 	 */
