@@ -30,6 +30,8 @@ import com.google.code.or.net.impl.packet.RawPacket;
  */
 public class TransportInputStreamImpl extends XInputStreamImpl implements TransportInputStream {
 
+	private static final int MAX_PACKET_SIZE = 0xFFFFFF;
+
 	/**
 	 * 
 	 */
@@ -58,5 +60,31 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 		}
 		r.setPacketBody(body);
 		return r;
+	}
+
+	@Override
+	public int read(final byte b[], int off, final int len) throws IOException {
+		int left = len;
+
+		// if we're about to read off the end of read-limit, see if this is a response
+		// that spans multiple packets.
+		while ( this.readLimit > 0 && (this.readCount + left) > this.readLimit
+				&& this.readLimit == TransportInputStreamImpl.MAX_PACKET_SIZE ) {
+			int first_len = this.readLimit - this.readCount;
+
+			super.read(b, off, first_len);
+
+			this.setReadLimit(0);
+			int nextPacketLength = this.readInt(3);
+			this.readInt(1); // consume packet sequence #
+
+			this.setReadLimit(nextPacketLength);
+			left -= first_len;
+			off += first_len;
+		}
+
+		super.read(b, off, left);
+
+		return len;
 	}
 }

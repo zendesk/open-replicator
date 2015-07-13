@@ -36,11 +36,12 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 	//
 	private int head = 0;
 	private int tail = 0;
-	private int readCount = 0;
-	private int readLimit = 0;
 	private final byte[] buffer;
 	private final InputStream is;
-	
+
+	protected int readCount = 0;
+	protected int readLimit = 0;
+
 
 	/**
 	 * 
