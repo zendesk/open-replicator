@@ -19,6 +19,7 @@ package com.google.code.or.net.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.google.code.or.io.ExceedLimitException;
 import com.google.code.or.io.impl.XInputStreamImpl;
 import com.google.code.or.net.Packet;
 import com.google.code.or.net.TransportInputStream;
@@ -29,6 +30,8 @@ import com.google.code.or.net.impl.packet.RawPacket;
  * @author Jingqi Xu
  */
 public class TransportInputStreamImpl extends XInputStreamImpl implements TransportInputStream {
+
+	private static final int MAX_PACKET_SIZE = 0xFFFFFF;
 
 	/**
 	 * 
@@ -58,5 +61,29 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 		}
 		r.setPacketBody(body);
 		return r;
+	}
+
+	@Override
+	public int read(final byte b[], final int off, final int len) throws IOException {
+		// if we're about to read off the end of read-limit, see if this is a response
+		// that spans multiple packets.  If so, perform a few different reads.
+		if( this.readLimit > 0 && (this.readCount + len) > this.readLimit
+				&& this.readLimit == TransportInputStreamImpl.MAX_PACKET_SIZE ) {
+			int first_len = this.readLimit - this.readCount;
+
+			super.read(b, off, first_len);
+
+			this.setReadLimit(0);
+			int nextPacketLength = this.readInt(3);
+			this.readInt(1); // consume packet sequence #
+
+			this.setReadLimit(nextPacketLength);
+
+			super.read(b, off + first_len, len - first_len);
+		} else {
+			super.read(b, off, len);
+		}
+
+		return len;
 	}
 }
