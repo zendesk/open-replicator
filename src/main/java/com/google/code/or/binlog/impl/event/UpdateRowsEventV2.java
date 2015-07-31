@@ -27,14 +27,14 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Used for row-based binary logging. This event logs updates of rows in a single table. 
- * 
+ * Used for row-based binary logging. This event logs updates of rows in a single table.
+ *
  * @author Jingqi Xu
  */
 public final class UpdateRowsEventV2 extends AbstractRowEvent {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.UPDATE_ROWS_EVENT_V2;
-	
+
 	//
 	private int extraInfoLength;
 	private byte extraInfo[];
@@ -42,19 +42,19 @@ public final class UpdateRowsEventV2 extends AbstractRowEvent {
 	private BitColumn usedColumnsBefore;
 	private BitColumn usedColumnsAfter;
 	private List<Pair<Row>> rows;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UpdateRowsEventV2() {
 	}
-	
+
 	public UpdateRowsEventV2(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -69,9 +69,9 @@ public final class UpdateRowsEventV2 extends AbstractRowEvent {
 		.append("usedColumnsAfter", usedColumnsAfter)
 		.append("rows", rows).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getExtraInfoLength() {
 		return extraInfoLength;
@@ -80,7 +80,7 @@ public final class UpdateRowsEventV2 extends AbstractRowEvent {
 	public void setExtraInfoLength(int extraInfoLength) {
 		this.extraInfoLength = extraInfoLength;
 	}
-	
+
 	public byte[] getExtraInfo() {
 		return extraInfo;
 	}
@@ -88,7 +88,7 @@ public final class UpdateRowsEventV2 extends AbstractRowEvent {
 	public void setExtraInfo(byte[] extraInfo) {
 		this.extraInfo = extraInfo;
 	}
-	
+
 	public UnsignedLong getColumnCount() {
 		return columnCount;
 	}
@@ -104,7 +104,7 @@ public final class UpdateRowsEventV2 extends AbstractRowEvent {
 	public void setUsedColumnsBefore(BitColumn usedColumnsBefore) {
 		this.usedColumnsBefore = usedColumnsBefore;
 	}
-	
+
 	public BitColumn getUsedColumnsAfter() {
 		return usedColumnsAfter;
 	}
@@ -112,7 +112,7 @@ public final class UpdateRowsEventV2 extends AbstractRowEvent {
 	public void setUsedColumnsAfter(BitColumn usedColumnsAfter) {
 		this.usedColumnsAfter = usedColumnsAfter;
 	}
-	
+
 	public List<Pair<Row>> getRows() {
 		return rows;
 	}

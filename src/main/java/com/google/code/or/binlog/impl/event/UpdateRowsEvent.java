@@ -27,32 +27,32 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Used for row-based binary logging. This event logs updates of rows in a single table. 
- * 
+ * Used for row-based binary logging. This event logs updates of rows in a single table.
+ *
  * @author Jingqi Xu
  */
 public final class UpdateRowsEvent extends AbstractRowEvent {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.UPDATE_ROWS_EVENT;
-	
+
 	//
 	private UnsignedLong columnCount;
 	private BitColumn usedColumnsBefore;
 	private BitColumn usedColumnsAfter;
 	private List<Pair<Row>> rows;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UpdateRowsEvent() {
 	}
-	
+
 	public UpdateRowsEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -65,9 +65,9 @@ public final class UpdateRowsEvent extends AbstractRowEvent {
 		.append("usedColumnsAfter", usedColumnsAfter)
 		.append("rows", rows).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UnsignedLong getColumnCount() {
 		return columnCount;
@@ -84,7 +84,7 @@ public final class UpdateRowsEvent extends AbstractRowEvent {
 	public void setUsedColumnsBefore(BitColumn usedColumnsBefore) {
 		this.usedColumnsBefore = usedColumnsBefore;
 	}
-	
+
 	public BitColumn getUsedColumnsAfter() {
 		return usedColumnsAfter;
 	}
@@ -92,7 +92,7 @@ public final class UpdateRowsEvent extends AbstractRowEvent {
 	public void setUsedColumnsAfter(BitColumn usedColumnsAfter) {
 		this.usedColumnsAfter = usedColumnsAfter;
 	}
-	
+
 	public List<Pair<Row>> getRows() {
 		return rows;
 	}

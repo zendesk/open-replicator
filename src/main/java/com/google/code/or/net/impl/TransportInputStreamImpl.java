@@ -25,7 +25,7 @@ import com.google.code.or.net.TransportInputStream;
 import com.google.code.or.net.impl.packet.RawPacket;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class TransportInputStreamImpl extends XInputStreamImpl implements TransportInputStream {
@@ -33,25 +33,25 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 	private static final int MAX_PACKET_SIZE = 0xFFFFFF;
 
 	/**
-	 * 
+	 *
 	 */
 	public TransportInputStreamImpl(InputStream is) {
 		super(is);
 	}
-	
+
 	public TransportInputStreamImpl(InputStream is, int size) {
 		super(is, size);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Packet readPacket() throws IOException {
 		//
 		final RawPacket r = new RawPacket();
 		r.setLength(readInt(3));
 		r.setSequence(readInt(1));
-		
+
 		//
 		int total = 0;
 		final byte[] body = new byte[r.getLength()];

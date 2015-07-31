@@ -23,19 +23,19 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QAutoIncrement extends AbstractStatusVariable {
 	//
 	public static final int TYPE = MySQLConstants.Q_AUTO_INCREMENT;
-	
+
 	//
 	private final int autoIncrementIncrement;
 	private final int autoIncrementOffset;
 
 	/**
-	 * 
+	 *
 	 */
 	public QAutoIncrement(int autoIncrementIncrement, int autoIncrementOffset) {
 		super(TYPE);
@@ -44,7 +44,7 @@ public class QAutoIncrement extends AbstractStatusVariable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -52,20 +52,20 @@ public class QAutoIncrement extends AbstractStatusVariable {
 		.append("autoIncrementIncrement", autoIncrementIncrement)
 		.append("autoIncrementOffset", autoIncrementOffset).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getAutoIncrementIncrement() {
 		return autoIncrementIncrement;
 	}
-	
+
 	public int getAutoIncrementOffset() {
 		return autoIncrementOffset;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static QAutoIncrement valueOf(XInputStream tis) throws IOException {
 		final int autoIncrementIncrement = tis.readInt(2);

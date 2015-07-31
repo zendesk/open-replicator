@@ -28,20 +28,20 @@ import com.google.code.or.common.glossary.Row;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class WriteRowsEventV2Parser extends AbstractRowEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public WriteRowsEventV2Parser() {
 		super(WriteRowsEventV2.EVENT_TYPE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -52,7 +52,7 @@ public class WriteRowsEventV2Parser extends AbstractRowEventParser {
 			is.skip(is.available());
 			return;
 		}
-		
+
 		//
 		final WriteRowsEventV2 event = new WriteRowsEventV2(header);
 		event.setBinlogFilename(context.getBinlogFileName());
@@ -60,14 +60,14 @@ public class WriteRowsEventV2Parser extends AbstractRowEventParser {
 		event.setReserved(is.readInt(2));
 		event.setExtraInfoLength(is.readInt(2));
 		if(event.getExtraInfoLength() > 2) event.setExtraInfo(is.readBytes(event.getExtraInfoLength() - 2));
-		event.setColumnCount(is.readUnsignedLong()); 
+		event.setColumnCount(is.readUnsignedLong());
 		event.setUsedColumns(is.readBit(event.getColumnCount().intValue()));
 		event.setRows(parseRows(is, tme, event));
 		context.getEventListener().onEvents(event);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected List<Row> parseRows(XInputStream is, TableMapEvent tme, WriteRowsEventV2 wre)
 	throws IOException {

@@ -24,20 +24,20 @@ import com.google.code.or.binlog.impl.event.StopEvent;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class StopEventParser extends AbstractBinlogEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public StopEventParser() {
 		super(StopEvent.EVENT_TYPE);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {

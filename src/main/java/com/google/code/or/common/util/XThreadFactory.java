@@ -31,13 +31,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class XThreadFactory implements ThreadFactory {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(XThreadFactory.class);
-	
+
 	//
 	protected String name;
 	protected final AtomicBoolean daemon;
@@ -45,23 +45,23 @@ public final class XThreadFactory implements ThreadFactory {
 	protected final List<WeakReference<Thread>> threads;
 	protected final ConcurrentHashMap<String, AtomicLong> sequences;
 	protected final AtomicReference<UncaughtExceptionHandler> uncaughtExceptionHandler;
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	public XThreadFactory() {
 		this(null, false, null);
 	}
-	
+
 	public XThreadFactory(String name) {
 		this(name, false, null);
 	}
-	
+
 	public XThreadFactory(String name, boolean daemon) {
 		this(name, daemon, null);
 	}
-	
+
 	public XThreadFactory(String name, boolean daemon, UncaughtExceptionHandler handler) {
 		this.name = name;
 		this.daemon = new AtomicBoolean(daemon);
@@ -72,7 +72,7 @@ public final class XThreadFactory implements ThreadFactory {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public String getName() {
 		return name;
@@ -81,50 +81,50 @@ public final class XThreadFactory implements ThreadFactory {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public boolean isDaemon() {
 		return daemon.get();
 	}
-	
+
 	public void setDaemon(boolean daemon) {
 		this.daemon.set(daemon);
 	}
-	
+
 	public UncaughtExceptionHandler getUncaughtExceptionHandler() {
 		return uncaughtExceptionHandler.get();
 	}
-	
+
 	public void setUncaughtExceptionHandler(UncaughtExceptionHandler handler) {
 		this.uncaughtExceptionHandler.set(handler);
 	}
-	
+
 	public boolean isTrackThreads() {
 		return trackThreads.get();
 	}
-	
+
 	public void setTrackThreads(boolean trackThreads) {
 		this.trackThreads.set(trackThreads);
 	}
-	
+
 	public List<Thread> getAliveThreads() {
 		return getThreads(true);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Thread newThread(Runnable r) {
 		//
 		final Thread t = new Thread(r);
 		t.setDaemon(isDaemon());
-		
+
 		//
 		String prefix = this.name;
 		if(prefix == null || prefix.equals("")) {
 			prefix = getInvoker(2);
 		}
 		t.setName(prefix + "-" + getSequence(prefix));
-		
+
 		//
 		final UncaughtExceptionHandler handler = this.getUncaughtExceptionHandler();
 		if(handler != null) {
@@ -136,18 +136,18 @@ public final class XThreadFactory implements ThreadFactory {
 				}
 			});
 		}
-		
+
 		//
 		if(this.isTrackThreads()) {
 			addThread(t);
 		}
-		
+
 		//
 		return t;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected String getInvoker(int depth) {
 		final Exception e = new Exception();
@@ -158,7 +158,7 @@ public final class XThreadFactory implements ThreadFactory {
 			return getClass().getSimpleName();
 		}
 	}
-	
+
 	protected long getSequence(String invoker) {
 		AtomicLong r = this.sequences.get(invoker);
 		if(r == null) {
@@ -170,7 +170,7 @@ public final class XThreadFactory implements ThreadFactory {
 		}
 		return r.incrementAndGet();
 	}
-	
+
 	protected synchronized void addThread(Thread thread) {
 		//
 		for(Iterator<WeakReference<Thread>> iter = this.threads.iterator(); iter.hasNext(); ) {
@@ -179,11 +179,11 @@ public final class XThreadFactory implements ThreadFactory {
 				iter.remove();
 			}
 		}
-		
+
 		//
 		this.threads.add(new WeakReference<Thread>(thread));
 	}
-	
+
 	protected synchronized List<Thread> getThreads(boolean aliveOnly) {
 		final List<Thread> r = new LinkedList<Thread>();
 		for(Iterator<WeakReference<Thread>> iter = this.threads.iterator(); iter.hasNext(); ) {

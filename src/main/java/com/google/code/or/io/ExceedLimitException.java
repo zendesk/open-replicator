@@ -19,7 +19,7 @@ package com.google.code.or.io;
 import java.io.IOException;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ExceedLimitException extends IOException {
@@ -27,11 +27,11 @@ public class ExceedLimitException extends IOException {
 	private static final long serialVersionUID = -5580022370029510002L;
 
 	/**
-	 * 
+	 *
 	 */
 	public ExceedLimitException() {
 	}
-	
+
 	public ExceedLimitException(String message) {
 		super(message);
 	}

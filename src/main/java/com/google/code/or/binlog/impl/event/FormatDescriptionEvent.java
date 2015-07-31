@@ -24,34 +24,34 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * A descriptor event that is written to the beginning of the each binary log file. 
- * This event is used as of MySQL 5.0; it supersedes START_EVENT_V3. 
- * 
+ * A descriptor event that is written to the beginning of the each binary log file.
+ * This event is used as of MySQL 5.0; it supersedes START_EVENT_V3.
+ *
  * @author Jingqi Xu
  */
 public final class FormatDescriptionEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.FORMAT_DESCRIPTION_EVENT;
-	
+
 	//
 	private int binlogVersion;
 	private StringColumn serverVersion;
 	private long createTimestamp;
 	private int headerLength;
 	private byte[] eventTypes;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public FormatDescriptionEvent() {
 	}
-	
+
 	public FormatDescriptionEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -63,9 +63,9 @@ public final class FormatDescriptionEvent extends AbstractBinlogEventV4 {
 		.append("headerLength", headerLength)
 		.append("eventTypes", Arrays.toString(eventTypes)).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getBinlogVersion() {
 		return binlogVersion;
@@ -90,7 +90,7 @@ public final class FormatDescriptionEvent extends AbstractBinlogEventV4 {
 	public void setCreateTimestamp(long createTimestamp) {
 		this.createTimestamp = createTimestamp;
 	}
-	
+
 	public int getHeaderLength() {
 		return headerLength;
 	}
@@ -98,7 +98,7 @@ public final class FormatDescriptionEvent extends AbstractBinlogEventV4 {
 	public void setHeaderLength(int headerLength) {
 		this.headerLength = headerLength;
 	}
-	
+
 	public byte[] getEventTypes() {
 		return eventTypes;
 	}

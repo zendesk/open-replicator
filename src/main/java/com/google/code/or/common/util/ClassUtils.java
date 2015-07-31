@@ -17,13 +17,13 @@
 package com.google.code.or.common.util;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class ClassUtils {
 
 	/**
-	 * 
+	 *
 	 */
 	public static String getShortClassName(String className) {
 		//

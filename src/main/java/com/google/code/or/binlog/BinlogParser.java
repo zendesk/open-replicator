@@ -20,36 +20,36 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  * @see http://forge.mysql.com/wiki/MySQL_Internals
  */
 public interface BinlogParser {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	boolean isRunning();
-	
+
 	void start() throws Exception;
-	
+
 	void stop(long timeout, TimeUnit unit) throws Exception;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	void setEventFilter(BinlogEventFilter filter);
-	
+
 	void setEventListener(BinlogEventListener listener);
-	
+
 	/**
-	 * 
+	 *
 	 */
 	List<BinlogParserListener> getParserListeners();
-	
+
 	boolean addParserListener(BinlogParserListener listener);
-	
+
 	boolean removeParserListener(BinlogParserListener listener);
-	
+
 	void setParserListeners(List<BinlogParserListener> listeners);
 }

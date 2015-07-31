@@ -17,22 +17,22 @@
 package com.google.code.or.binlog;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface BinlogParserListener {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	void onStart(BinlogParser parser);
-	
+
 	void onStop(BinlogParser parser);
-	
+
 	void onException(BinlogParser parser, Exception eception);
-	
+
 	/**
-	 * 
+	 *
 	 */
 	class Adapter implements BinlogParserListener {
 

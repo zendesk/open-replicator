@@ -25,13 +25,13 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class GreetingPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = 5506239117316020734L;
-	
+
 	//
 	private int protocolVersion;
 	private StringColumn serverVersion;
@@ -42,9 +42,9 @@ public class GreetingPacket extends AbstractPacket {
 	private int serverStatus;
 	private StringColumn scramble2;
 	private StringColumn pluginProvidedData;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -59,9 +59,9 @@ public class GreetingPacket extends AbstractPacket {
 		.append("scramble2", scramble2)
 		.append("pluginProvidedData", pluginProvidedData).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(128);
@@ -77,9 +77,9 @@ public class GreetingPacket extends AbstractPacket {
 		s.writeNullTerminatedString(this.pluginProvidedData);
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getProtocolVersion() {
 		return protocolVersion;
@@ -96,7 +96,7 @@ public class GreetingPacket extends AbstractPacket {
 	public StringColumn getScramble1() {
 		return scramble1;
 	}
-	
+
 	public int getServerCapabilities() {
 		return serverCapabilities;
 	}
@@ -112,9 +112,9 @@ public class GreetingPacket extends AbstractPacket {
 	public StringColumn getScramble2() {
 		return scramble2;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static GreetingPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());

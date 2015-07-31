@@ -17,10 +17,10 @@
 package com.google.code.or.binlog;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface BinlogEventFilter {
-	
+
 	boolean accepts(BinlogEventV4Header header, BinlogParserContext context);
 }

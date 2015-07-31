@@ -16,7 +16,7 @@ public class OpenParserTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenParserTest.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public static void main(String args[]) throws Exception {
 		//
@@ -32,7 +32,7 @@ public class OpenParserTest {
 		    }
 		});
 		op.start();
-		
+
 		//
 		LOGGER.info("press 'q' to stop");
 		final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

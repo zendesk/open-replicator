@@ -20,7 +20,7 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class UserVariableRow extends AbstractUserVariable {
@@ -29,17 +29,17 @@ public class UserVariableRow extends AbstractUserVariable {
 
 	//
 	private final byte[] value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UserVariableRow(byte[] value) {
 		super(TYPE);
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -48,7 +48,7 @@ public class UserVariableRow extends AbstractUserVariable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getValue() {
 		return this.value;

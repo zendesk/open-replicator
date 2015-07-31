@@ -17,7 +17,7 @@
 package com.google.code.or.common.util;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class ToStringBuilder {
@@ -26,7 +26,7 @@ public final class ToStringBuilder {
 	private final StringBuilder builder;
 
 	/**
-	 * 
+	 *
 	 */
 	public ToStringBuilder(Object object) {
 		String name = ClassUtils.getShortClassName(object.getClass().getName());
@@ -34,7 +34,7 @@ public final class ToStringBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -42,32 +42,32 @@ public final class ToStringBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public ToStringBuilder append(String key, int value) {
 		if(count++ > 0) this.builder.append(',');
 		this.builder.append(key).append('=').append(value);
 		return this;
 	}
-	
+
 	public ToStringBuilder append(String key, long value) {
 		if(count++ > 0) this.builder.append(',');
 		this.builder.append(key).append('=').append(value);
 		return this;
 	}
-	
+
 	public ToStringBuilder append(String key, byte value) {
 		if(count++ > 0) this.builder.append(',');
 		this.builder.append(key).append('=').append(value);
 		return this;
 	}
-	
+
 	public ToStringBuilder append(String key, String value) {
 		if(count++ > 0) this.builder.append(',');
 		this.builder.append(key).append('=').append(value == null ? "<null>" : value);
 		return this;
 	}
-	
+
 	public ToStringBuilder append(String key, Object value) {
 		if(count++ > 0) this.builder.append(',');
 		this.builder.append(key).append('=').append(value == null ? "<null>" : value);

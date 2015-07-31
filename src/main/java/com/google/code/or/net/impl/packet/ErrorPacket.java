@@ -26,13 +26,13 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ErrorPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = -6842057808734657288L;
-	
+
 	//
 	public static final byte PACKET_MARKER = (byte)0xFF;
 
@@ -42,9 +42,9 @@ public class ErrorPacket extends AbstractPacket {
 	private StringColumn slash;
 	private StringColumn sqlState;
 	private StringColumn errorMessage;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -55,9 +55,9 @@ public class ErrorPacket extends AbstractPacket {
 		.append("sqlState", sqlState)
 		.append("errorMessage", errorMessage).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(64);
@@ -68,26 +68,26 @@ public class ErrorPacket extends AbstractPacket {
 		s.writeFixedLengthString(this.errorMessage);
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getPacketMarker() {
 		return packetMarker;
 	}
-	
+
 	public void setPacketMarker(int fieldCount) {
 		this.packetMarker = fieldCount;
 	}
-	
+
 	public int getErrorCode() {
 		return errorCode;
 	}
-	
+
 	public void setErrorCode(int errorCode) {
 		this.errorCode = errorCode;
 	}
-	
+
 	public StringColumn getSlash() {
 		return slash;
 	}
@@ -95,25 +95,25 @@ public class ErrorPacket extends AbstractPacket {
 	public void setSlash(StringColumn slash) {
 		this.slash = slash;
 	}
-	
+
 	public StringColumn getSqlState() {
 		return sqlState;
 	}
-	
+
 	public void setSqlState(StringColumn sqlState) {
 		this.sqlState = sqlState;
 	}
-	
+
 	public StringColumn getErrorMessage() {
 		return errorMessage;
 	}
-	
+
 	public void setErrorMessage(StringColumn errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static ErrorPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());

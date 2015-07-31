@@ -21,7 +21,7 @@ import java.io.IOException;
 import com.google.code.or.io.XOutputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface TransportOutputStream extends XOutputStream {

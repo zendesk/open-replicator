@@ -21,7 +21,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  * @see tungsten replicator
  */
@@ -31,25 +31,25 @@ public final class MySQLUtils {
 	private static final BigDecimal POSITIVE_ONE = BigDecimal.ONE;
 	private static final BigDecimal NEGATIVE_ONE = new BigDecimal("-1");
 	private static final int DECIMAL_BINARY_SIZE[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static byte[] password41OrLater(byte password[], byte scramble[]) {
 		final byte[] stage1 = CodecUtils.sha(password);
 		final byte[] stage2 = CodecUtils.sha(CodecUtils.concat(scramble, CodecUtils.sha(stage1)));
 		return CodecUtils.xor(stage1, stage2);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static int toYear(int value) {
 		return 1900 + value;
 	}
 
 	public static java.sql.Date toDate(int value) {
-		final int d = value % 32; value >>>= 5; 
+		final int d = value % 32; value >>>= 5;
 		final int m = value % 16;
 		final int y = value >> 4;
 		final Calendar cal = Calendar.getInstance();
@@ -67,7 +67,7 @@ public final class MySQLUtils {
         c.set(Calendar.MILLISECOND, 0);
         return new java.sql.Time(c.getTimeInMillis());
 	}
-	
+
 	public static java.sql.Time toTime2(int value, int nanos) {
 		final int h = (value >> 12) & 0x3FF;
 		final int m = (value >> 6) & 0x3F;
@@ -78,7 +78,7 @@ public final class MySQLUtils {
         final long millis = c.getTimeInMillis();
         return new java.sql.Time(millis + (nanos / 1000000));
 	}
-	
+
 	public static java.util.Date toDatetime(long value) {
 		final int second = (int)(value % 100); value /= 100;
 		final int minute = (int)(value % 100); value /= 100;
@@ -91,7 +91,7 @@ public final class MySQLUtils {
         c.set(Calendar.MILLISECOND, 0);
         return c.getTime();
 	}
-	
+
 	public static java.util.Date toDatetime2(long value, int nanos) {
 		final long x = (value >> 22) & 0x1FFFFL;
 		final int year = (int)(x / 13);
@@ -106,17 +106,17 @@ public final class MySQLUtils {
         final long millis = c.getTimeInMillis();
         return new java.util.Date(millis + (nanos / 1000000));
 	}
-	
+
 	public static java.sql.Timestamp toTimestamp(long seconds) {
 		return new java.sql.Timestamp(seconds * 1000L);
 	}
-	
+
 	public static Timestamp toTimestamp2(long seconds, int nanos) {
 		final java.sql.Timestamp r = new java.sql.Timestamp(seconds * 1000L);
 		r.setNanos(nanos);
 		return r;
 	}
-	
+
 	public static BigDecimal toDecimal(int precision, int scale, byte[] value) {
 		//
         final boolean positive = (value[0] & 0x80) == 0x80;
@@ -139,7 +139,7 @@ public final class MySQLUtils {
         	ip = ip.movePointRight(DIGITS_PER_4BYTES).add(BigDecimal.valueOf(i));
         }
 
-        // 
+        //
         int shift = 0;
         BigDecimal fp = BigDecimal.ZERO;
         for (; shift + DIGITS_PER_4BYTES <= scale; shift += DIGITS_PER_4BYTES, offset += 4) {
@@ -150,13 +150,13 @@ public final class MySQLUtils {
         	final int i = CodecUtils.toInt(value, offset, DECIMAL_BINARY_SIZE[scale - shift]);
             fp = fp.add(BigDecimal.valueOf(i).movePointLeft(scale));
         }
-        
+
         //
         return positive ? POSITIVE_ONE.multiply(ip.add(fp)) : NEGATIVE_ONE.multiply(ip.add(fp));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static int getDecimalBinarySize(int precision, int scale) {
 		final int x = precision - scale;

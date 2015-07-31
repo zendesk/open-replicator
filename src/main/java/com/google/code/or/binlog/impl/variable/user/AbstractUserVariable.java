@@ -20,30 +20,30 @@ import com.google.code.or.binlog.UserVariable;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public abstract class AbstractUserVariable implements UserVariable {
 	//
 	protected final int type;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public AbstractUserVariable(int type) {
 		this.type = type;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getType() {
 		return type;

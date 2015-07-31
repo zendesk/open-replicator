@@ -19,25 +19,25 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class EnumColumn implements Column {
 	//
 	private static final long serialVersionUID = -6017298545673303080L;
-	
+
 	//
 	private final int value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private EnumColumn(int value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -45,16 +45,16 @@ public final class EnumColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Integer getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final EnumColumn valueOf(int value) {
-		return new EnumColumn(value); 
+		return new EnumColumn(value);
 	}
 }

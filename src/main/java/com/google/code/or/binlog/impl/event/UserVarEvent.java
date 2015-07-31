@@ -23,16 +23,16 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Written every time a statement uses a user variable; precedes other events for the statement. 
- * Indicates the value to use for the user variable in the next statement. 
- * This is written only before a QUERY_EVENT and is not used with row-based logging. 
- * 
+ * Written every time a statement uses a user variable; precedes other events for the statement.
+ * Indicates the value to use for the user variable in the next statement.
+ * This is written only before a QUERY_EVENT and is not used with row-based logging.
+ *
  * @author Jingqi Xu
  */
 public final class UserVarEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.USER_VAR_EVENT;
-	
+
 	//
 	private int varNameLength;
 	private StringColumn varName;
@@ -41,19 +41,19 @@ public final class UserVarEvent extends AbstractBinlogEventV4 {
 	private int varCollation;
 	private int varValueLength;
 	private UserVariable varValue;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UserVarEvent() {
 	}
-	
+
 	public UserVarEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -67,9 +67,9 @@ public final class UserVarEvent extends AbstractBinlogEventV4 {
 		.append("varValueLength", varValueLength)
 		.append("varValue", varValue).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getVarNameLength() {
 		return varNameLength;

@@ -22,7 +22,7 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ComQuit extends AbstractCommandPacket {
@@ -30,22 +30,22 @@ public class ComQuit extends AbstractCommandPacket {
 	private static final long serialVersionUID = 4569517082177697955L;
 
 	/**
-	 * 
+	 *
 	 */
 	public ComQuit() {
 		super(MySQLConstants.COM_QUIT);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() throws IOException {
 		return new byte[0];

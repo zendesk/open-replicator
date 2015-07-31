@@ -19,14 +19,14 @@ package com.google.code.or.binlog;
 import com.google.code.or.binlog.impl.event.TableMapEvent;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface BinlogParserContext {
-	
+
 	String getBinlogFileName();
-	
+
 	BinlogEventListener getEventListener();
-	
+
 	TableMapEvent getTableMapEvent(long tableId);
 }

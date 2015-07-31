@@ -19,29 +19,29 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class LongLongColumn implements Column {
 	//
 	private static final long serialVersionUID = 4159913884779393654L;
-	
+
 	//
 	public static final long MIN_VALUE = Long.MIN_VALUE;
 	public static final long MAX_VALUE = Long.MAX_VALUE;
-	
+
 	//
 	private final long value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private LongLongColumn(long value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -49,14 +49,14 @@ public final class LongLongColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Long getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final LongLongColumn valueOf(long value) {
 		return new LongLongColumn(value);

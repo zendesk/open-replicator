@@ -25,20 +25,20 @@ import com.google.code.or.net.Packet;
 import com.google.code.or.net.TransportOutputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class TransportOutputStreamImpl extends XOutputStreamImpl implements TransportOutputStream {
 
 	/**
-	 * 
+	 *
 	 */
 	public TransportOutputStreamImpl(OutputStream out) {
 		super(out);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void writePacket(Packet packet) throws IOException {
 		//
@@ -49,11 +49,11 @@ public class TransportOutputStreamImpl extends XOutputStreamImpl implements Tran
 			writeBytes(body);
 			return;
 		}
-		
+
 		// If the length of the packet is greater than the value of MAX_PACKET_LENGTH,
-		// which is defined to be power(2, 24) �C 1 in sql/net_serv.cc, the packet gets 
-		// split into smaller packets with bodies of MAX_PACKET_LENGTH plus the last 
-		// packet with a body that is shorter than MAX_PACKET_LENGTH. 
+		// which is defined to be power(2, 24) �C 1 in sql/net_serv.cc, the packet gets
+		// split into smaller packets with bodies of MAX_PACKET_LENGTH plus the last
+		// packet with a body that is shorter than MAX_PACKET_LENGTH.
 		int offset = 0;
 		int sequence = packet.getSequence();
 		for(; offset + MySQLConstants.MAX_PACKET_LENGTH <= body.length; offset += MySQLConstants.MAX_PACKET_LENGTH) {
@@ -61,7 +61,7 @@ public class TransportOutputStreamImpl extends XOutputStreamImpl implements Tran
 			writeInt(sequence++, 1);
 			writeBytes(body, offset, MySQLConstants.MAX_PACKET_LENGTH);
 		}
-		
+
 		// The last short packet will always be present even if it must have a zero-length body.
 		// It serves as an indicator that there are no more packet parts left in the stream for this large packet.
 		writeInt(body.length - offset, 3);

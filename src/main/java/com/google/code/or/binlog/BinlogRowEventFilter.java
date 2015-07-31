@@ -19,10 +19,10 @@ package com.google.code.or.binlog;
 import com.google.code.or.binlog.impl.event.TableMapEvent;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface BinlogRowEventFilter {
-	
+
 	boolean accepts(BinlogEventV4Header header, BinlogParserContext context, TableMapEvent event);
 }

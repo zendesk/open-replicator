@@ -29,20 +29,20 @@ import com.google.code.or.common.glossary.Row;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class UpdateRowsEventParser extends AbstractRowEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public UpdateRowsEventParser() {
 		super(UpdateRowsEvent.EVENT_TYPE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -53,21 +53,21 @@ public class UpdateRowsEventParser extends AbstractRowEventParser {
 			is.skip(is.available());
 			return;
 		}
-		
+
 		//
 		final UpdateRowsEvent event = new UpdateRowsEvent(header);
 		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);
 		event.setReserved(is.readInt(2));
-		event.setColumnCount(is.readUnsignedLong()); 
+		event.setColumnCount(is.readUnsignedLong());
 		event.setUsedColumnsBefore(is.readBit(event.getColumnCount().intValue()));
 		event.setUsedColumnsAfter(is.readBit(event.getColumnCount().intValue()));
 		event.setRows(parseRows(is, tme, event));
 		context.getEventListener().onEvents(event);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected List<Pair<Row>> parseRows(XInputStream is, TableMapEvent tme, UpdateRowsEvent ure)
 	throws IOException {

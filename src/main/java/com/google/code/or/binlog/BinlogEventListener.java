@@ -17,10 +17,10 @@
 package com.google.code.or.binlog;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface BinlogEventListener {
-	
+
 	void onEvents(BinlogEventV4 event);
 }

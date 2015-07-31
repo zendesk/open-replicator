@@ -20,7 +20,7 @@ import com.google.code.or.binlog.BinlogEventV4Header;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class BinlogEventV4HeaderImpl implements BinlogEventV4Header {
@@ -32,9 +32,9 @@ public final class BinlogEventV4HeaderImpl implements BinlogEventV4Header {
 	private long nextPosition;
 	private int flags;
 	private long timestampOfReceipt;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -47,69 +47,69 @@ public final class BinlogEventV4HeaderImpl implements BinlogEventV4Header {
 		.append("flags", flags)
 		.append("timestampOfReceipt", timestampOfReceipt).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getHeaderLength() {
 		return 19;
 	}
-	
+
 	public long getPosition() {
 		return this.nextPosition - this.eventLength;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getTimestamp() {
 		return timestamp;
 	}
-	
+
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-	
+
 	public int getEventType() {
 		return eventType;
 	}
-	
+
 	public void setEventType(int eventType) {
 		this.eventType = eventType;
 	}
-	
+
 	public long getServerId() {
 		return serverId;
 	}
-	
+
 	public void setServerId(long serverId) {
 		this.serverId = serverId;
 	}
-	
+
 	public long getEventLength() {
 		return eventLength;
 	}
-	
+
 	public void setEventLength(long eventLength) {
 		this.eventLength = eventLength;
 	}
-	
+
 	public long getNextPosition() {
 		return nextPosition;
 	}
-	
+
 	public void setNextPosition(long nextPosition) {
 		this.nextPosition = nextPosition;
 	}
-	
+
 	public int getFlags() {
 		return flags;
 	}
-	
+
 	public void setFlags(int flags) {
 		this.flags = flags;
 	}
-	
+
 	public long getTimestampOfReceipt() {
 		return timestampOfReceipt;
 	}

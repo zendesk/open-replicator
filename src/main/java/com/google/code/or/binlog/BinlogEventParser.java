@@ -21,12 +21,12 @@ import java.io.IOException;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface BinlogEventParser {
-	
+
 	int getEventType();
-	
+
 	void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context) throws IOException;
 }
