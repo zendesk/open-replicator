@@ -74,6 +74,7 @@ public class QueryEventParser extends AbstractBinlogEventParser {
 		event.setStatusVariables(parseStatusVariables(is.readBytes(event.getStatusVariablesLength())));
 		event.setDatabaseName(is.readNullTerminatedString());
 		event.setSql(is.readFixedLengthString(is.available()));
+		System.out.println(event);
 		context.getEventListener().onEvents(event);
 	}
 

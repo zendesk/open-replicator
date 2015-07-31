@@ -25,33 +25,35 @@ import com.google.code.or.net.TransportInputStream;
 import com.google.code.or.net.impl.packet.RawPacket;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class TransportInputStreamImpl extends XInputStreamImpl implements TransportInputStream {
 
 	private static final int MAX_PACKET_SIZE = 0xFFFFFF;
+	private Long totalLimit;
+	private Long totalRead;
 
 	/**
-	 * 
+	 *
 	 */
 	public TransportInputStreamImpl(InputStream is) {
 		super(is);
 	}
-	
+
 	public TransportInputStreamImpl(InputStream is, int size) {
 		super(is, size);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Packet readPacket() throws IOException {
 		//
 		final RawPacket r = new RawPacket();
 		r.setLength(readInt(3));
 		r.setSequence(readInt(1));
-		
+
 		//
 		int total = 0;
 		final byte[] body = new byte[r.getLength()];
@@ -62,6 +64,49 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 		return r;
 	}
 
+	public void setTotalLimit(long limit) {
+		this.totalLimit = limit;
+		this.totalRead = 0L;
+	}
+
+	// here we diverge from the standard "what's there in the buffer" implementation
+	// and convince the calling code that there's more in the buffer, letting the end-of-buffer
+	// code in read() kick in.
+
+	@Override
+	public int available() throws IOException {
+		if ( this.totalLimit == null )
+			return super.available();
+		else
+			return (int) (this.totalLimit - this.totalRead);
+	};
+
+	@Override
+	public boolean hasMore() throws IOException {
+		if ( this.totalLimit == null )
+			return super.hasMore();
+		else
+			return this.totalLimit - this.totalRead > 0;
+	};
+
+	@Override
+	public long skip(long n) throws IOException {
+		long res = super.skip(n);
+		if ( this.totalRead != null )
+			this.totalRead += res;
+		return res;
+	};
+
+	@Override
+	public int read() throws IOException {
+		int retval = super.read();
+
+		if ( this.totalRead != null )
+			this.totalRead++;
+
+		return retval;
+	}
+
 	@Override
 	public int read(final byte b[], int off, final int len) throws IOException {
 		int left = len;
@@ -70,10 +115,12 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 		// that spans multiple packets.
 		while ( this.readLimit > 0 && (this.readCount + left) > this.readLimit
 				&& this.readLimit == TransportInputStreamImpl.MAX_PACKET_SIZE ) {
-			int first_len = this.readLimit - this.readCount;
 
+			// consume from middle of buffer to end of packet.
+			int first_len = this.readLimit - this.readCount;
 			super.read(b, off, first_len);
 
+			// read next header
 			this.setReadLimit(0);
 			int nextPacketLength = this.readInt(3);
 			this.readInt(1); // consume packet sequence #
@@ -83,7 +130,11 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 			off += first_len;
 		}
 
+		// now consume whatever's left,
 		super.read(b, off, left);
+
+		if ( this.totalRead != null )
+			this.totalRead += len;
 
 		return len;
 	}

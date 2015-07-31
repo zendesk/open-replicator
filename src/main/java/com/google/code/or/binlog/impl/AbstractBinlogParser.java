@@ -288,6 +288,7 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 		//
 		private String binlogFileName;
 		private final Map<Long, TableMapEvent> tableMapEvents = new HashMap<Long, TableMapEvent>();
+		private boolean checksumEnabled;
 
 		/**
 		 *
@@ -342,6 +343,14 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 			} catch(Exception e) {
 				LOGGER.error("failed to notify binlog event listener, event: " + event, e);
 			}
+		}
+
+		public boolean getChecksumEnabled() {
+			return this.checksumEnabled;
+		}
+
+		public void setChecksumEnabled(boolean flag) {
+			this.checksumEnabled = flag;
 		}
 	}
 }

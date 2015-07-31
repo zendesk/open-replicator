@@ -26,6 +26,7 @@ import com.google.code.or.binlog.impl.event.BinlogEventV4HeaderImpl;
 import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.io.XInputStream;
 import com.google.code.or.net.Transport;
+import com.google.code.or.net.TransportInputStream;
 import com.google.code.or.net.impl.packet.EOFPacket;
 import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.OKPacket;
@@ -84,14 +85,15 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	@Override
 	protected void doParse() throws Exception {
 		//
-		final XInputStream is = this.transport.getInputStream();
+		final TransportInputStream is = this.transport.getInputStream();
 		final Context context = new Context(this);
 		while(isRunning()) {
 			try {
 				// Parse packet
-				final int packetLength = is.readInt(3) - 4;
+				int packetLength = is.readInt(3);
 				final int packetSequence = is.readInt(1);
 
+				LOGGER.info("setting packetLimit to {}", packetLength);
 				is.setReadLimit(packetLength); // Ensure the packet boundary
 
 				//
@@ -114,6 +116,14 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				header.setEventType(is.readInt(1));
 				header.setServerId(is.readLong(4));
 				header.setEventLength(is.readInt(4));
+
+				long eventLimit = header.getEventLength() - 13;
+				if ( context.getChecksumEnabled() )
+					eventLimit -= 4;
+
+				LOGGER.info("setting totalLimit to {}", eventLimit);
+				is.setTotalLimit(eventLimit);
+
 				header.setNextPosition(is.readLong(4));
 				header.setFlags(is.readInt(2));
 				header.setTimestampOfReceipt(System.currentTimeMillis());
@@ -130,24 +140,18 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 					parser.parse(is, header, context);
 				}
 
-
-				if ( true ) {
-                    is.setReadLimit(4);
-					Long checksum = is.readLong(4);
-					LOGGER.info("checksum: {} header: {}", checksum, header);
-				} else {
-					LOGGER.info("no checksum available for {}", header);
-				}
-//				if ( this.checksumEvents &&
-//						header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT  &&
-//						header.getEventType() != MySQLConstants.XID_EVENT &&
-//						header.getEventType() != MySQLConstants.XID_EVENT  ) {
-//				}
-
 				// Ensure the packet boundary
 				if(is.available() != 0) {
 					throw new RuntimeException("assertion failed, available: " + is.available() + ", event type: " + header.getEventType());
 				}
+
+				if ( context.getChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT) {
+                    is.setReadLimit(0);
+                    is.setTotalLimit(0);
+					Long checksum = is.readLong(4);
+					LOGGER.info("checksum: {} header: {}", checksum, header);
+				}
+
 			} finally {
 				is.setReadLimit(0);
 			}

@@ -109,14 +109,14 @@ public final class FormatDescriptionEvent extends AbstractBinlogEventV4 {
 
 	public boolean checksumEnabled() {
 		if ( checksumPossible() ) {
-			return this.eventTypes[this.eventTypes.length] == 1;
+			return this.eventTypes[this.eventTypes.length - 1] == 1;
 		} else {
 			return false;
 		}
 
 	}
 
-	private boolean checksumPossible() {
+	public boolean checksumPossible() {
 		Integer[] version = splitServerVersion();
 		if ( version[0] >= 5 && version[1] >= 6 && version[2] >= 1 ) {
 			return true;

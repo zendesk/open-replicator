@@ -21,10 +21,12 @@ import java.io.IOException;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
+
 public interface TransportInputStream extends XInputStream {
+	public void setTotalLimit(long limit);
 
 	Packet readPacket() throws IOException;
 }
