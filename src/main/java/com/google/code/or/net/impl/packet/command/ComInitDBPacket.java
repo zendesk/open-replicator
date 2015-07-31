@@ -24,34 +24,34 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.util.XSerializer;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ComInitDBPacket extends AbstractCommandPacket {
 	//
 	private static final long serialVersionUID = 449639496684376511L;
-	
+
 	//
 	private StringColumn databaseName;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ComInitDBPacket() {
 		super(MySQLConstants.COM_INIT_DB);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("databaseName", databaseName).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() throws IOException {
 		final XSerializer ps = new XSerializer();
@@ -59,9 +59,9 @@ public class ComInitDBPacket extends AbstractCommandPacket {
 		ps.writeFixedLengthString(this.databaseName);
 		return ps.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public StringColumn getDatabaseName() {
 		return databaseName;

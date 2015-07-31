@@ -53,23 +53,23 @@ import com.google.code.or.common.util.MySQLUtils;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 	//
 	protected BinlogRowEventFilter rowEventFilter;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public AbstractRowEventParser(int eventType) {
 		super(eventType);
 		this.rowEventFilter = new BinlogRowEventFilterImpl();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public BinlogRowEventFilter getRowEventFilter() {
 		return rowEventFilter;
@@ -78,11 +78,11 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 	public void setRowEventFilter(BinlogRowEventFilter filter) {
 		this.rowEventFilter = filter;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
-	protected Row parseRow(XInputStream is, TableMapEvent tme, BitColumn usedColumns) 
+	protected Row parseRow(XInputStream is, TableMapEvent tme, BitColumn usedColumns)
 	throws IOException {
 		//
 		int unusedColumnCount = 0;
@@ -100,7 +100,7 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 				final int meta1 = meta & 0xFF;
 				if ((meta0 & 0x30) != 0x30) { // a long CHAR() field: see #37426
 					type = meta0 | 0x30;
-					length = meta1 | (((meta0 & 0x30) ^ 0x30) << 4); 
+					length = meta1 | (((meta0 & 0x30) ^ 0x30) << 4);
 				} else {
 					switch (meta0) {
 					case MySQLConstants.TYPE_SET:
@@ -114,7 +114,7 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 					}
 				}
 			}
-			
+
 			//
 			if(!usedColumns.get(i)) {
 				unusedColumnCount++;
@@ -123,7 +123,7 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 				columns.add(NullColumn.valueOf(type));
 				continue;
 			}
-			
+
 			//
 			switch(type) {
 			case MySQLConstants.TYPE_TINY: columns.add(TinyColumn.valueOf(is.readSignedInt(1))); break;
@@ -140,7 +140,7 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 			case MySQLConstants.TYPE_TIMESTAMP: columns.add(TimestampColumn.valueOf(MySQLUtils.toTimestamp(is.readLong(4)))); break;
 			case MySQLConstants.TYPE_ENUM: columns.add(EnumColumn.valueOf(is.readInt(length))); break;
 			case MySQLConstants.TYPE_SET: columns.add(SetColumn.valueOf(is.readLong(length))); break;
-			case MySQLConstants.TYPE_BIT: 
+			case MySQLConstants.TYPE_BIT:
 				final int bitLength = (meta >> 8) * 8 + (meta & 0xFF);
 				columns.add(is.readBit(bitLength, false));
 				break;

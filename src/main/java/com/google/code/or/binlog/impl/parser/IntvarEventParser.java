@@ -25,20 +25,20 @@ import com.google.code.or.common.glossary.UnsignedLong;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class IntvarEventParser extends AbstractBinlogEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public IntvarEventParser() {
 		super(IntvarEvent.EVENT_TYPE);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {

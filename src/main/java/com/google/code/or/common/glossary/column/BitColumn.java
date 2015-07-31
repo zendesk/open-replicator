@@ -19,22 +19,22 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class BitColumn implements Column {
 	//
 	private static final long serialVersionUID = 4193150509864408687L;
-	
+
 	//
 	private static final int BIT_MASKS[] = {1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7};
-	
+
 	//
 	private final int length;
 	private final byte[] value;
 
 	/**
-	 * 
+	 *
 	 */
 	private BitColumn(int length, byte[] value) {
 		this.length = length;
@@ -42,7 +42,7 @@ public final class BitColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -52,27 +52,27 @@ public final class BitColumn implements Column {
 		}
 		return r.toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getLength() {
 		return this.length;
 	}
-	
+
 	public byte[] getValue() {
 		return this.value;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public boolean get(int index) {
 		final int byteIndex = (index >> 3);
 		final int bitIndex = (index - (byteIndex << 3));
 		return (this.value[byteIndex] & BIT_MASKS[bitIndex]) != 0;
 	}
-	
+
 	public void set(int index) {
 		final int byteIndex = (index >> 3);
 		final int bitIndex = (index - (byteIndex << 3));
@@ -80,7 +80,7 @@ public final class BitColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static final BitColumn valueOf(int length, byte[] value) {
 		if(length < 0 || length > (value.length << 3)) throw new IllegalArgumentException("invalid length: " + length);

@@ -33,7 +33,7 @@ import com.google.code.or.binlog.impl.variable.user.UserVariableString;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class UserVarEventParser extends AbstractBinlogEventParser {
@@ -41,14 +41,14 @@ public class UserVarEventParser extends AbstractBinlogEventParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserVarEventParser.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public UserVarEventParser() {
 		super(UserVarEvent.EVENT_TYPE);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -67,9 +67,9 @@ public class UserVarEventParser extends AbstractBinlogEventParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	protected UserVariable parseUserVariable(XInputStream is, UserVarEvent event) 
+	protected UserVariable parseUserVariable(XInputStream is, UserVarEvent event)
 	throws IOException {
 		final int type = event.getVarType();
 		switch(type) {

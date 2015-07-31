@@ -23,20 +23,20 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QCharsetCode extends AbstractStatusVariable {
 	//
 	public static final int TYPE = MySQLConstants.Q_CHARSET_CODE;
-	
+
 	//
 	private final int characterSetClient;
 	private final int collationConnection;
 	private final int collationServer;
 
 	/**
-	 * 
+	 *
 	 */
 	public QCharsetCode(int characterSetClient, int collationConnection, int collationServer) {
 		super(TYPE);
@@ -44,9 +44,9 @@ public class QCharsetCode extends AbstractStatusVariable {
 		this.collationConnection = collationConnection;
 		this.collationServer = collationServer;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -55,9 +55,9 @@ public class QCharsetCode extends AbstractStatusVariable {
 		.append("collationConnection", collationConnection)
 		.append("collationServer", collationServer).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getCharacterSetClient() {
 		return characterSetClient;
@@ -70,9 +70,9 @@ public class QCharsetCode extends AbstractStatusVariable {
 	public int getCollationServer() {
 		return collationServer;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static QCharsetCode valueOf(XInputStream tis) throws IOException {
 		final int characterSetClient = tis.readInt(2);

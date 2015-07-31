@@ -25,19 +25,19 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ResultSetHeaderPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = -5491186291875548645L;
-	
+
 	//
 	private UnsignedLong fieldCount;
 	private UnsignedLong extra;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -45,9 +45,9 @@ public class ResultSetHeaderPacket extends AbstractPacket {
 		.append("fieldCount", fieldCount)
 		.append("extra", extra).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(32);
@@ -55,9 +55,9 @@ public class ResultSetHeaderPacket extends AbstractPacket {
 		if(this.extra != null) s.writeUnsignedLong(this.extra);
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UnsignedLong getFieldCount() {
 		return fieldCount;
@@ -76,7 +76,7 @@ public class ResultSetHeaderPacket extends AbstractPacket {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static ResultSetHeaderPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());

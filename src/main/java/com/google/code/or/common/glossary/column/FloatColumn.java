@@ -19,25 +19,25 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class FloatColumn implements Column {
 	//
 	private static final long serialVersionUID = -890414733626452618L;
-	
+
 	//
 	private final float value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private FloatColumn(float value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -45,14 +45,14 @@ public final class FloatColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Float getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final FloatColumn valueOf(float value) {
 		return new FloatColumn(value);

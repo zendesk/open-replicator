@@ -17,16 +17,16 @@
 package com.google.code.or.binlog.impl.event;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public abstract class AbstractRowEvent extends AbstractBinlogEventV4 {
 	//
 	protected long tableId;
 	protected int reserved;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getTableId() {
 		return tableId;

@@ -24,19 +24,19 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QUpdatedDBNames extends AbstractStatusVariable {
 	//
 	public static final int TYPE = MySQLConstants.Q_UPDATED_DB_NAMES;
-	
+
 	//
 	private final int accessedDbCount;
 	private final StringColumn[] accessedDbs;
 
 	/**
-	 * 
+	 *
 	 */
 	public QUpdatedDBNames(int accessedDbCount, StringColumn[] accessedDbs) {
 		super(TYPE);
@@ -45,7 +45,7 @@ public class QUpdatedDBNames extends AbstractStatusVariable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -53,9 +53,9 @@ public class QUpdatedDBNames extends AbstractStatusVariable {
 		.append("accessedDbCount", accessedDbCount)
 		.append("accessedDbs", accessedDbs).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getAccessedDbCount() {
 		return accessedDbCount;
@@ -64,9 +64,9 @@ public class QUpdatedDBNames extends AbstractStatusVariable {
 	public StringColumn[] getAccessedDbs() {
 		return accessedDbs;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static QUpdatedDBNames valueOf(XInputStream tis) throws IOException {
 		int accessedDbCount= tis.readInt(1);

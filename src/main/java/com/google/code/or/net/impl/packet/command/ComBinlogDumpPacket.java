@@ -24,28 +24,28 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.util.XSerializer;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ComBinlogDumpPacket extends AbstractCommandPacket {
 	//
 	private static final long serialVersionUID = 449639496684376511L;
-	
+
 	//
 	private long binlogPosition;
 	private int binlogFlag;
 	private long serverId;
 	private StringColumn binlogFileName;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ComBinlogDumpPacket() {
 		super(MySQLConstants.COM_BINLOG_DUMP);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -55,9 +55,9 @@ public class ComBinlogDumpPacket extends AbstractCommandPacket {
 		.append("serverId", serverId)
 		.append("binlogFileName", binlogFileName).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() throws IOException {
 		final XSerializer ps = new XSerializer();
@@ -68,9 +68,9 @@ public class ComBinlogDumpPacket extends AbstractCommandPacket {
 		ps.writeFixedLengthString(this.binlogFileName);
 		return ps.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getBinlogPosition() {
 		return binlogPosition;

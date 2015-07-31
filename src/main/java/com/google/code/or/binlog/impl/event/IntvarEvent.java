@@ -22,34 +22,34 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Written every time a statement uses an AUTO_INCREMENT column or the LAST_INSERT_ID() function; 
- * precedes other events for the statement. This is written only before a QUERY_EVENT and is not 
+ * Written every time a statement uses an AUTO_INCREMENT column or the LAST_INSERT_ID() function;
+ * precedes other events for the statement. This is written only before a QUERY_EVENT and is not
  * used with row-based logging. An INTVAR_EVENT is written with a "subtype" in the event data part:
  *   INSERT_ID_EVENT indicates the value to use for an AUTO_INCREMENT column in the next statement.
- *   LAST_INSERT_ID_EVENT indicates the value to use for the LAST_INSERT_ID() function in the next statement. 
- *   
+ *   LAST_INSERT_ID_EVENT indicates the value to use for the LAST_INSERT_ID() function in the next statement.
+ *
  * @author Jingqi Xu
  */
 public final class IntvarEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.INTVAR_EVENT;
-	
+
 	//
 	private int type;
 	private UnsignedLong value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public IntvarEvent() {
 	}
-	
+
 	public IntvarEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -58,9 +58,9 @@ public final class IntvarEvent extends AbstractBinlogEventV4 {
 		.append("type", type)
 		.append("value", value).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getType() {
 		return type;

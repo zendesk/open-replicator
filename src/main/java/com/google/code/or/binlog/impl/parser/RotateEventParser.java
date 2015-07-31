@@ -24,20 +24,20 @@ import com.google.code.or.binlog.impl.event.RotateEvent;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class RotateEventParser extends AbstractBinlogEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public RotateEventParser() {
 		super(RotateEvent.EVENT_TYPE);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {

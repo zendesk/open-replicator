@@ -25,13 +25,13 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ResultSetFieldPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = -6484191963940716299L;
-	
+
 	//
 	private StringColumn catalog;
 	private StringColumn db;
@@ -47,9 +47,9 @@ public class ResultSetFieldPacket extends AbstractPacket {
 	private int decimalPrecision;
 	private int reserved;
 	private StringColumn defaultValue; // Optional
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -69,9 +69,9 @@ public class ResultSetFieldPacket extends AbstractPacket {
 		.append("reserved", reserved)
 		.append("defaultValue", defaultValue).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(256);
@@ -91,9 +91,9 @@ public class ResultSetFieldPacket extends AbstractPacket {
 		if(this.defaultValue != null) s.writeLengthCodedString(this.defaultValue);
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public StringColumn getCatalog() {
 		return catalog;
@@ -208,7 +208,7 @@ public class ResultSetFieldPacket extends AbstractPacket {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static ResultSetFieldPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());

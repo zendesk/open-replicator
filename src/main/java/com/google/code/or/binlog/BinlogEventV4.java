@@ -37,6 +37,6 @@ package com.google.code.or.binlog;
  * @author Jingqi Xu
  */
 public interface BinlogEventV4 {
-	
+
 	BinlogEventV4Header getHeader();
 }

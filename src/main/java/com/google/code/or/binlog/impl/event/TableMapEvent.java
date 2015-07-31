@@ -27,20 +27,20 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Used for row-based binary logging. This event precedes each row operation event. 
- * It maps a table definition to a number, where the table definition consists of 
- * database and table names and column definitions. The purpose of this event is to 
- * enable replication when a table has different definitions on the master and slave. 
- * Row operation events that belong to the same transaction may be grouped into sequences, 
- * in which case each such sequence of events begins with a sequence of TABLE_MAP_EVENT events: 
- * one per table used by events in the sequence. 
- * 
+ * Used for row-based binary logging. This event precedes each row operation event.
+ * It maps a table definition to a number, where the table definition consists of
+ * database and table names and column definitions. The purpose of this event is to
+ * enable replication when a table has different definitions on the master and slave.
+ * Row operation events that belong to the same transaction may be grouped into sequences,
+ * in which case each such sequence of events begins with a sequence of TABLE_MAP_EVENT events:
+ * one per table used by events in the sequence.
+ *
  * @author Jingqi Xu
  */
 public final class TableMapEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.TABLE_MAP_EVENT;
-	
+
 	//
 	private long tableId;
 	private int reserved;
@@ -53,19 +53,19 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 	private UnsignedLong columnMetadataCount;
 	private Metadata columnMetadata;
 	private BitColumn columnNullabilities;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public TableMapEvent() {
 	}
-	
+
 	public TableMapEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -83,9 +83,9 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 		.append("columnMetadata", columnMetadata)
 		.append("columnNullabilities", columnNullabilities).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public TableMapEvent copy() {
 		final TableMapEvent r = new TableMapEvent();
@@ -103,9 +103,9 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 		r.setColumnNullabilities(this.columnNullabilities);
 		return r;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getTableId() {
 		return tableId;
@@ -186,7 +186,7 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 	public void setColumnMetadata(Metadata columnMetadata) {
 		this.columnMetadata = columnMetadata;
 	}
-	
+
 	public BitColumn getColumnNullabilities() {
 		return columnNullabilities;
 	}

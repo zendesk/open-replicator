@@ -19,17 +19,17 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class TinyColumn implements Column {
 	//
 	private static final long serialVersionUID = 3629858638897033423L;
-	
+
 	//
 	public static final int MIN_VALUE = -128;
 	public static final int MAX_VALUE = 127;
-	
+
 	//
 	private static final TinyColumn[] CACHE = new TinyColumn[256];
 	static {
@@ -37,19 +37,19 @@ public final class TinyColumn implements Column {
 			CACHE[i + 128] = new TinyColumn(i);
 		}
 	}
-	
+
 	//
 	private final int value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private TinyColumn(int value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -57,14 +57,14 @@ public final class TinyColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Integer getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final TinyColumn valueOf(int value) {
 		if(value < MIN_VALUE || value > MAX_VALUE) throw new IllegalArgumentException("invalid value: " + value);

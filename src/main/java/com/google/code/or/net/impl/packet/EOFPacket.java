@@ -25,13 +25,13 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class EOFPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = 7001637720833705527L;
-	
+
 	//
 	public static final byte PACKET_MARKER = (byte)0xFE;
 
@@ -41,7 +41,7 @@ public class EOFPacket extends AbstractPacket {
 	private int serverStatus;
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -50,9 +50,9 @@ public class EOFPacket extends AbstractPacket {
 		.append("warningCount", warningCount)
 		.append("serverStatus", serverStatus).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(32);
@@ -61,9 +61,9 @@ public class EOFPacket extends AbstractPacket {
 		s.writeInt(this.serverStatus, 2);
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getPacketMarker() {
 		return packetMarker;
@@ -88,9 +88,9 @@ public class EOFPacket extends AbstractPacket {
 	public void setServerStatus(int serverStatus) {
 		this.serverStatus = serverStatus;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static EOFPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());
@@ -103,7 +103,7 @@ public class EOFPacket extends AbstractPacket {
 		return r;
 	}
 
-	public static EOFPacket valueOf(int packetLength, int packetSequence, int packetMarker, XInputStream is) 
+	public static EOFPacket valueOf(int packetLength, int packetSequence, int packetMarker, XInputStream is)
 	throws IOException {
 		final EOFPacket r = new EOFPacket();
 		r.length = packetLength;

@@ -24,28 +24,28 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QInvoker extends AbstractStatusVariable {
 	//
 	public static final int TYPE = MySQLConstants.Q_INVOKER;
-	
+
 	//
 	private final StringColumn user;
 	private final StringColumn host;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public QInvoker(StringColumn user, StringColumn host) {
 		super(TYPE);
 		this.user = user;
 		this.host = host;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -53,20 +53,20 @@ public class QInvoker extends AbstractStatusVariable {
 		.append("user", user)
 		.append("host", host).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public StringColumn getUser() {
 		return user;
 	}
-	
+
 	public StringColumn getHost() {
 		return host;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static QInvoker valueOf(XInputStream tis) throws IOException {
 		final int userLength = tis.readInt(1);

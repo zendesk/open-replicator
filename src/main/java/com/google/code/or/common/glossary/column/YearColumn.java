@@ -19,13 +19,13 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class YearColumn implements Column {
 	//
 	private static final long serialVersionUID = 6428744630692270846L;
-	
+
 	//
 	private static final YearColumn[] CACHE = new YearColumn[255];
 	static {
@@ -33,19 +33,19 @@ public final class YearColumn implements Column {
 			CACHE[i] = new YearColumn(i + 1900);
 		}
 	}
-	
+
 	//
 	private final int value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private YearColumn(int value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -53,14 +53,14 @@ public final class YearColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Integer getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final YearColumn valueOf(int value) {
 		final int index = value - 1900;

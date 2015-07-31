@@ -66,6 +66,10 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	/**
 	 *
 	 */
+	public String getBinlogFileName() {
+		return binlogFileName;
+	}
+
 	public void setBinlogFileName(String name) {
 		this.binlogFileName = name;
 	}

@@ -17,18 +17,18 @@
 package com.google.code.or.common.util;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class MySQLConstants {
 	//
 	public static final byte[] BINLOG_MAGIC = new byte[]{(byte)0xfe, (byte)0x62, (byte)0x69, (byte)0x6e};
-	
+
 	//
 	public static final int MAX_TIME_WIDTH = 10;
 	public static final int MAX_DATETIME_WIDTH = 19;
 	public static final int MAX_PACKET_LENGTH = (256 * 256 * 256 - 1);
-	
+
 	// Client capabilities
 	public static final int CLIENT_LONG_PASSWORD = 1; /* new more secure passwords */
 	public static final int CLIENT_FOUND_ROWS = 2; /* Found instead of affected rows */
@@ -52,7 +52,7 @@ public final class MySQLConstants {
 	public static final int CLIENT_PLUGIN_AUTH = 1 << 19; /* Client supports plugin authentication */
 	public static final int CLIENT_SSL_VERIFY_SERVER_CERT = 1 << 30;
 	public static final int CLIENT_REMEMBER_OPTIONS = 1 << 31;
-	
+
 	// Command
 	public static final int COM_SLEEP = 0x00;
 	public static final int COM_QUIT = 0x01;
@@ -85,7 +85,7 @@ public final class MySQLConstants {
 	public static final int COM_STMT_FETCH = 0x1c;
 	public static final int COM_DAEMON = 0x1d;
 	public static final int COM_END = 0x1e;
-	
+
 	// Status variable type
 	public static final int Q_FLAGS2_CODE = 0;
 	public static final int Q_SQL_MODE_CODE = 1;
@@ -101,17 +101,17 @@ public final class MySQLConstants {
 	public static final int Q_INVOKER = 11;
 	public static final int Q_UPDATED_DB_NAMES = 12;
 	public static final int Q_MICROSECONDS = 13;
-	
+
 	public static final int MAX_DBS_IN_EVENT_MTS = 16;
 	public static final int OVER_MAX_DBS_IN_EVENT_MTS = 254;
-	
+
 	// User variable type
 	public static final int STRING_RESULT = 0;
 	public static final int REAL_RESULT = 1;
-	public static final int INT_RESULT = 2; 
+	public static final int INT_RESULT = 2;
 	public static final int ROW_RESULT =3;
 	public static final int DECIMAL_RESULT = 4;
-	
+
 	// Column type
 	public static final int TYPE_DECIMAL = 0;
 	public static final int TYPE_TINY = 1;
@@ -143,7 +143,7 @@ public final class MySQLConstants {
 	public static final int TYPE_VAR_STRING = 253;
 	public static final int TYPE_STRING = 254;
 	public static final int TYPE_GEOMETRY = 255;
-	
+
 	// SQL modes
 	public static final long SM_LREAL_AS_FLOATL = 0x1L;
 	public static final long SM_LPIPES_AS_CONCATL = 0x2L;
@@ -177,7 +177,7 @@ public final class MySQLConstants {
 	public static final long SM_LHIGH_NOT_PRECEDENCEL = 0x20000000L;
 	public static final long SM_LNO_ENGINE_SUBSTITUTIONL = 0x40000000L;
 	public static final long SM_LPAD_CHAR_TO_FULL_LENGTHL = 0x80000000L;
-	
+
 	// sql/log_event.h
 	public static final int UNKNOWN_EVENT = 0;
 	public static final int START_EVENT_V3 = 1;

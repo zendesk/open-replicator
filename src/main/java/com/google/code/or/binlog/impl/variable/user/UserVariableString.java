@@ -20,7 +20,7 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class UserVariableString extends AbstractUserVariable {
@@ -30,9 +30,9 @@ public class UserVariableString extends AbstractUserVariable {
 	//
 	private final byte[] value;
 	private final int collation;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public UserVariableString(byte[] value, int collation) {
 		super(TYPE);
@@ -41,7 +41,7 @@ public class UserVariableString extends AbstractUserVariable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -49,14 +49,14 @@ public class UserVariableString extends AbstractUserVariable {
 		.append("value", value)
 		.append("collation", collation).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getValue() {
 		return this.value;
 	}
-	
+
 	public int getCollation() {
 		return collation;
 	}

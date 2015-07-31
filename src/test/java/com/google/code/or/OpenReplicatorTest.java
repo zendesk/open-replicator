@@ -15,7 +15,7 @@ public class OpenReplicatorTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenReplicatorTest.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public static void main(String args[]) throws Exception {
 		//

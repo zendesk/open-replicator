@@ -26,33 +26,33 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Used for row-based binary logging. This event logs deletions of rows in a single table. 
- * 
+ * Used for row-based binary logging. This event logs deletions of rows in a single table.
+ *
  * @author Jingqi Xu
  */
 public final class DeleteRowsEventV2 extends AbstractRowEvent {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.DELETE_ROWS_EVENT_V2;
-	
+
 	//
 	private int extraInfoLength;
 	private byte extraInfo[];
 	private UnsignedLong columnCount;
 	private BitColumn usedColumns;
 	private List<Row> rows;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public DeleteRowsEventV2() {
 	}
-	
+
 	public DeleteRowsEventV2(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -66,9 +66,9 @@ public final class DeleteRowsEventV2 extends AbstractRowEvent {
 		.append("usedColumns", usedColumns)
 		.append("rows", rows).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getExtraInfoLength() {
 		return extraInfoLength;
@@ -77,7 +77,7 @@ public final class DeleteRowsEventV2 extends AbstractRowEvent {
 	public void setExtraInfoLength(int extraInfoLength) {
 		this.extraInfoLength = extraInfoLength;
 	}
-	
+
 	public byte[] getExtraInfo() {
 		return extraInfo;
 	}
@@ -85,7 +85,7 @@ public final class DeleteRowsEventV2 extends AbstractRowEvent {
 	public void setExtraInfo(byte[] extraInfo) {
 		this.extraInfo = extraInfo;
 	}
-	
+
 	public UnsignedLong getColumnCount() {
 		return columnCount;
 	}
@@ -101,7 +101,7 @@ public final class DeleteRowsEventV2 extends AbstractRowEvent {
 	public void setUsedColumns(BitColumn usedColumns) {
 		this.usedColumns = usedColumns;
 	}
-	
+
 	public List<Row> getRows() {
 		return rows;
 	}

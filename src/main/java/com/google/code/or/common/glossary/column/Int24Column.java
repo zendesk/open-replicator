@@ -19,17 +19,17 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class Int24Column implements Column {
 	//
 	private static final long serialVersionUID = 6456161237369680803L;
-	
+
 	//
 	public static final int MIN_VALUE = -8388608;
 	public static final int MAX_VALUE =  8388607;
-	
+
 	//
 	private static final Int24Column[] CACHE = new Int24Column[255];
 	static {
@@ -37,19 +37,19 @@ public final class Int24Column implements Column {
 			CACHE[i] = new Int24Column(i + Byte.MIN_VALUE);
 		}
 	}
-	
+
 	//
 	private final int value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private Int24Column(int value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -57,14 +57,14 @@ public final class Int24Column implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Integer getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final Int24Column valueOf(int value) {
 		if(value < MIN_VALUE || value > MAX_VALUE) throw new IllegalArgumentException("invalid value: " + value);

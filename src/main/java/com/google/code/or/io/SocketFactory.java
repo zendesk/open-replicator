@@ -19,10 +19,10 @@ package com.google.code.or.io;
 import java.net.Socket;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface SocketFactory {
-	
+
 	Socket create(String host, int port) throws Exception;
 }

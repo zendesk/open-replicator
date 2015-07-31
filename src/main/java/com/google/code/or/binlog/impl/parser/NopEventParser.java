@@ -24,20 +24,20 @@ import com.google.code.or.binlog.BinlogParserContext;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class NopEventParser implements BinlogEventParser {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getEventType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {

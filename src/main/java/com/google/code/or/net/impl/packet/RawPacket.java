@@ -19,7 +19,7 @@ package com.google.code.or.net.impl.packet;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class RawPacket extends AbstractPacket {
@@ -28,9 +28,9 @@ public class RawPacket extends AbstractPacket {
 
 	//
 	private byte packetBody[];
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -38,9 +38,9 @@ public class RawPacket extends AbstractPacket {
 		.append("length", length)
 		.append("sequence", sequence).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		return packetBody;

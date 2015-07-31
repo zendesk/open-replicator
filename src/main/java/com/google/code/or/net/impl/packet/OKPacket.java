@@ -26,16 +26,16 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class OKPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = 3674181092305117701L;
-	
+
 	//
 	public static final byte PACKET_MARKER = (byte)0x00;
-	
+
 	//
 	private int packetMarker;
 	private UnsignedLong affectedRows;
@@ -45,7 +45,7 @@ public class OKPacket extends AbstractPacket {
 	private StringColumn message;
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -57,9 +57,9 @@ public class OKPacket extends AbstractPacket {
 		.append("warningCount", warningCount)
 		.append("message", message).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(64);
@@ -71,9 +71,9 @@ public class OKPacket extends AbstractPacket {
 		if(this.message != null) s.writeFixedLengthString(this.message);
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getPacketMarker() {
 		return packetMarker;
@@ -124,7 +124,7 @@ public class OKPacket extends AbstractPacket {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static OKPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());
