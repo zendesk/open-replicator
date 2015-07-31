@@ -24,42 +24,42 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QCatalogCode extends AbstractStatusVariable {
 	//
 	public static final int TYPE = MySQLConstants.Q_CATALOG_CODE;
-	
+
 	//
 	private final StringColumn catalogName;
 
 	/**
-	 * 
+	 *
 	 */
 	public QCatalogCode(StringColumn catalogName) {
 		super(TYPE);
 		this.catalogName = catalogName;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("catalogName", catalogName).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public StringColumn getCatalogName() {
 		return catalogName;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static QCatalogCode valueOf(XInputStream tis) throws IOException {
 		tis.readInt(1); // Length

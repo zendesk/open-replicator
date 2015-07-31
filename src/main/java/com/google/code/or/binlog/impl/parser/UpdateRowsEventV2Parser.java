@@ -29,20 +29,20 @@ import com.google.code.or.common.glossary.Row;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class UpdateRowsEventV2Parser extends AbstractRowEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public UpdateRowsEventV2Parser() {
 		super(UpdateRowsEventV2.EVENT_TYPE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -53,7 +53,7 @@ public class UpdateRowsEventV2Parser extends AbstractRowEventParser {
 			is.skip(is.available());
 			return;
 		}
-		
+
 		//
 		final UpdateRowsEventV2 event = new UpdateRowsEventV2(header);
 		event.setBinlogFilename(context.getBinlogFileName());
@@ -61,15 +61,15 @@ public class UpdateRowsEventV2Parser extends AbstractRowEventParser {
 		event.setReserved(is.readInt(2));
 		event.setExtraInfoLength(is.readInt(2));
 		if(event.getExtraInfoLength() > 2) event.setExtraInfo(is.readBytes(event.getExtraInfoLength() - 2));
-		event.setColumnCount(is.readUnsignedLong()); 
+		event.setColumnCount(is.readUnsignedLong());
 		event.setUsedColumnsBefore(is.readBit(event.getColumnCount().intValue()));
 		event.setUsedColumnsAfter(is.readBit(event.getColumnCount().intValue()));
 		event.setRows(parseRows(is, tme, event));
 		context.getEventListener().onEvents(event);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected List<Pair<Row>> parseRows(XInputStream is, TableMapEvent tme, UpdateRowsEventV2 ure)
 	throws IOException {

@@ -34,13 +34,13 @@ import com.google.code.or.net.impl.packet.OKPacket;
 import com.google.code.or.net.impl.packet.RawPacket;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class AuthenticatorImpl implements Transport.Authenticator {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticatorImpl.class);
-	
+
 	//
 	public static final int DEFAULT_CAPABILITIES = (MySQLConstants.CLIENT_LONG_FLAG | MySQLConstants.CLIENT_PROTOCOL_41 | MySQLConstants.CLIENT_SECURE_CONNECTION);
 
@@ -52,15 +52,15 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 	protected int clientCapabilities;
 	protected int maximumPacketLength;
 	protected String encoding = "utf-8";
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void login(Transport transport) throws IOException {
 		//
 		final TransportContext ctx = transport.getContext();
 		LOGGER.info("start to login, user: {}, host: {}, port: {}", new Object[]{this.user, ctx.getServerHost(), ctx.getServerPort()});
-		
+
 		//
 		final XSerializer s = new XSerializer(64);
 		s.writeInt(buildClientCapabilities(), 4);
@@ -71,7 +71,7 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 		s.writeInt(20, 1); // the length of the SHA1 encrypted password
 		s.writeBytes(MySQLUtils.password41OrLater(this.password.getBytes(this.encoding), ctx.getScramble().getBytes(this.encoding)));
 		if(this.initialSchema != null) s.writeNullTerminatedString(StringColumn.valueOf(this.initialSchema.getBytes(this.encoding)));
-		
+
 		//
 		final RawPacket request = new RawPacket();
 		request.setSequence(1);
@@ -79,7 +79,7 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 		request.setLength(request.getPacketBody().length);
 		transport.getOutputStream().writePacket(request);
 		transport.getOutputStream().flush();
-		
+
 		//
 		final Packet response = transport.getInputStream().readPacket();
 		if(response.getPacketBody()[0] == ErrorPacket.PACKET_MARKER) {
@@ -94,9 +94,9 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 			throw new RuntimeException("assertion failed, invalid packet: " + response);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public String getUser() {
 		return user;
@@ -113,7 +113,7 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getEncoding() {
 		return encoding;
 	}
@@ -129,7 +129,7 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 	public void setInitialSchema(String schema) {
 		this.initialSchema = schema;
 	}
-	
+
 	public int getClientCollation() {
 		return clientCollation;
 	}
@@ -145,7 +145,7 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 	public void setClientCapabilities(int capabilities) {
 		this.clientCapabilities = capabilities;
 	}
-	
+
 	public int getMaximumPacketLength() {
 		return maximumPacketLength;
 	}
@@ -153,9 +153,9 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 	public void setMaximumPacketLength(int packetLength) {
 		this.maximumPacketLength = packetLength;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected int buildClientCapabilities() {
 		int r = this.clientCapabilities > 0 ? this.clientCapabilities : DEFAULT_CAPABILITIES;

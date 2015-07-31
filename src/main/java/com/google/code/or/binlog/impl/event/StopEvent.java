@@ -21,26 +21,26 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Written when mysqld stops. 
- * 
+ * Written when mysqld stops.
+ *
  * @author Jingqi Xu
  */
 public final class StopEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.STOP_EVENT;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public StopEvent() {
 	}
-	
+
 	public StopEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {

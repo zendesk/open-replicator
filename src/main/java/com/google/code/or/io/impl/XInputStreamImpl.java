@@ -29,7 +29,7 @@ import com.google.code.or.io.XInputStream;
 import com.google.code.or.io.util.XSerializer;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class XInputStreamImpl extends InputStream implements XInputStream {
@@ -44,38 +44,38 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public XInputStreamImpl(InputStream is) {
 		this(is, 512 *  1024);
 	}
-	
+
 	public XInputStreamImpl(InputStream is, int size) {
 		this.is = is;
 		this.buffer = new byte[size];
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public int readInt(int length) throws IOException {
 		return readInt(length, true);
 	}
-	
+
 	public long readLong(int length) throws IOException {
 		return readLong(length, true);
 	}
-	
+
 	public byte[] readBytes(int length) throws IOException {
 		final byte[] r = new byte[length];
 		this.read(r, 0, length);
 		return r;
 	}
-	
+
 	public BitColumn readBit(int length) throws IOException {
 		return readBit(length, true);
 	}
-	
+
 	public UnsignedLong readUnsignedLong() throws IOException {
 		final int v = this.read();
 		if(v < 251) return UnsignedLong.valueOf(v);
@@ -85,12 +85,12 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 		else if(v == 254) return UnsignedLong.valueOf(readLong(8));
 		else throw new RuntimeException("assertion failed, should NOT reach here");
 	}
-	
+
 	public StringColumn readLengthCodedString() throws IOException {
 		final UnsignedLong length = readUnsignedLong();
-		return length == null ? null : readFixedLengthString(length.intValue()); 
+		return length == null ? null : readFixedLengthString(length.intValue());
 	}
-	
+
 	public StringColumn readNullTerminatedString() throws IOException {
 		final XSerializer s = new XSerializer(128); // 128 should be OK for most schema names
 		while(true) {
@@ -100,13 +100,13 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 		}
 		return StringColumn.valueOf(s.toByteArray());
 	}
-	
+
 	public StringColumn readFixedLengthString(final int length) throws IOException {
 		return StringColumn.valueOf(readBytes(length));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int readSignedInt(int length) throws IOException {
 		int r = 0;
@@ -135,7 +135,7 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 		}
 		return r;
 	}
-	
+
 	public int readInt(int length, boolean littleEndian) throws IOException {
 		int r = 0;
 		for(int i = 0; i < length; ++i) {
@@ -161,26 +161,26 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 		}
 		return r;
 	}
-	
+
 	public BitColumn readBit(int length, boolean littleEndian) throws IOException {
 		byte[] bytes = readBytes((int)((length + 7) >> 3));
 		if(!littleEndian) bytes = CodecUtils.toBigEndian(bytes);
 		return BitColumn.valueOf(length, bytes);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public void close() throws IOException {
 		this.is.close();
 	}
-	
+
 	public void setReadLimit(final int limit) throws IOException {
 		this.readCount = 0;
 		this.readLimit = limit;
 	}
-	
+
 	@Override
 	public int available() throws IOException {
 		if(this.readLimit > 0) {
@@ -189,12 +189,12 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 			return this.tail - this.head + this.is.available();
 		}
 	}
-	
+
 	public boolean hasMore() throws IOException {
 		if(this.head < this.tail) return true;
 		return this.available() > 0;
 	}
-	
+
 	@Override
 	public long skip(final long n) throws IOException {
 		if(this.readLimit > 0 && (this.readCount + n) > this.readLimit) {
@@ -205,7 +205,7 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 			return n; // always skip the number of bytes specified by parameter "n"
 		}
 	}
-	
+
 	@Override
 	public int read() throws IOException {
 		if(this.readLimit > 0 && (this.readCount + 1) > this.readLimit) {
@@ -217,7 +217,7 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 			return r;
 		}
 	}
-	
+
 	@Override
 	public int read(final byte b[], final int off, final int len) throws IOException {
 		if(this.readLimit > 0 && (this.readCount + len) > this.readLimit) {
@@ -228,16 +228,16 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 			return len; // always read the number of bytes specified by parameter "len"
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void doFill() throws IOException {
 		this.head = 0;
 		this.tail = this.is.read(this.buffer, 0, this.buffer.length);
 		if(this.tail <= 0) throw new EOFException();
 	}
-	
+
 	private long doSkip(final long n) throws IOException {
 		long total = n;
 		while(total > 0) {
@@ -252,7 +252,7 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
 		}
 		return n;
 	}
-	
+
 	private int doRead(final byte[] b, final int off, final int len) throws IOException {
 		int total = len;
 		int index = off;

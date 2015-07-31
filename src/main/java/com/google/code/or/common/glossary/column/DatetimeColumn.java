@@ -20,19 +20,19 @@ import com.google.code.or.common.glossary.Column;
 import com.google.code.or.common.util.MySQLUtils;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class DatetimeColumn implements Column {
 	//
 	private static final long serialVersionUID = 6444968242222031354L;
-	
+
 	//
 	private final java.util.Date value;
 	private long longValue;
 
 	/**
-	 * 
+	 *
 	 */
 	private DatetimeColumn(java.util.Date value) {
 		this.value = value;
@@ -44,7 +44,7 @@ public final class DatetimeColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -52,7 +52,7 @@ public final class DatetimeColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public java.util.Date getValue() {
 		return this.value;
@@ -64,7 +64,7 @@ public final class DatetimeColumn implements Column {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public static final DatetimeColumn valueOf(java.util.Date value) {
 		return new DatetimeColumn(value);

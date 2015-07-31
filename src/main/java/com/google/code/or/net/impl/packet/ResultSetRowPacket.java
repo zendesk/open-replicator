@@ -27,27 +27,27 @@ import com.google.code.or.io.util.XSerializer;
 import com.google.code.or.net.Packet;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class ResultSetRowPacket extends AbstractPacket {
 	//
 	private static final long serialVersionUID = 698187140476020984L;
-	
+
 	//
 	private List<StringColumn> columns;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("columns", columns).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getPacketBody() {
 		final XSerializer s = new XSerializer(1024);
@@ -56,9 +56,9 @@ public class ResultSetRowPacket extends AbstractPacket {
 		}
 		return s.toByteArray();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public List<StringColumn> getColumns() {
 		return columns;
@@ -67,9 +67,9 @@ public class ResultSetRowPacket extends AbstractPacket {
 	public void setColumns(List<StringColumn> columns) {
 		this.columns = columns;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static ResultSetRowPacket valueOf(Packet packet) throws IOException {
 		final XDeserializer d = new XDeserializer(packet.getPacketBody());

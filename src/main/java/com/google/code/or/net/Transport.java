@@ -17,32 +17,32 @@
 package com.google.code.or.net;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  * @see http://forge.mysql.com/wiki/MySQL_Internals
  */
 public interface Transport {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	boolean isConnected();
-	
+
 	void disconnect() throws Exception;
-	
+
 	void connect(String host, int port) throws Exception;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	TransportContext getContext();
-	
+
 	TransportInputStream getInputStream();
 
 	TransportOutputStream getOutputStream();
-	
+
 	/**
-	 * 
+	 *
 	 */
 	interface Authenticator {
 

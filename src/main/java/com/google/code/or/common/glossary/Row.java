@@ -21,7 +21,7 @@ import java.util.List;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class Row {
@@ -29,26 +29,26 @@ public class Row {
 	private List<Column> columns;
 
 	/**
-	 * 
+	 *
 	 */
 	public Row() {
 	}
-	
+
 	public Row(List<Column> columns) {
 		this.columns = columns;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("columns", columns).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public List<Column> getColumns() {
 		return columns;

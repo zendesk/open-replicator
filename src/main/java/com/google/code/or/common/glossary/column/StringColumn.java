@@ -19,25 +19,25 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class StringColumn implements Column {
 	//
 	private static final long serialVersionUID = 1009717372407166422L;
-	
+
 	//
 	private final byte[] value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private StringColumn(byte[] value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -45,14 +45,14 @@ public final class StringColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public byte[] getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final StringColumn valueOf(byte[] value) {
 		return new StringColumn(value);

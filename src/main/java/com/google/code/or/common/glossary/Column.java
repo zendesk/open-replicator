@@ -19,10 +19,10 @@ package com.google.code.or.common.glossary;
 import java.io.Serializable;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface Column extends Serializable {
-	
+
 	Object getValue();
 }

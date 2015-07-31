@@ -22,13 +22,13 @@ import com.google.code.or.io.XInputStream;
 import com.google.code.or.io.XOutputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class IOUtils {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static void closeQuietly(Socket socket) {
 		try {
@@ -37,7 +37,7 @@ public final class IOUtils {
 			// NOP
 		}
 	}
-	
+
 	public static void closeQuietly(XInputStream is) {
 		try {
 			is.close();
@@ -45,7 +45,7 @@ public final class IOUtils {
 			// NOP
 		}
 	}
-	
+
 	public static void closeQuietly(XOutputStream os) {
 		try {
 			os.close();

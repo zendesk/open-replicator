@@ -22,41 +22,41 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class RamdomAccessFileInputStream extends InputStream {
 	//
 	private final RandomAccessFile file;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public RamdomAccessFileInputStream(File file) throws IOException {
 		this.file = new RandomAccessFile(file, "r");
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public int available() throws IOException {
 		final long fp = this.file.getFilePointer();
 		return (int)(this.file.length() - fp);
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		this.file.close();
 	}
-	
+
 	@Override
 	public long skip(long n) throws IOException {
 		final long fp = this.file.getFilePointer();
 		this.file.seek(fp + n);
 		return n;
 	}
-	 
+
 	@Override
 	public int read() throws IOException {
 		return this.file.read();

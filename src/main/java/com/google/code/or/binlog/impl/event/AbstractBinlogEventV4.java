@@ -21,7 +21,7 @@ import com.google.code.or.binlog.BinlogEventV4Header;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public abstract class AbstractBinlogEventV4 implements BinlogEventV4 {
@@ -30,16 +30,16 @@ public abstract class AbstractBinlogEventV4 implements BinlogEventV4 {
 	protected String binlogFilename;
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("header", header).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public BinlogEventV4Header getHeader() {
 		return header;

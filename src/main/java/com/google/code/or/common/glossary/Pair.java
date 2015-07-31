@@ -19,36 +19,36 @@ package com.google.code.or.common.glossary;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class Pair<T> {
 	//
 	private T before;
 	private T after;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Pair() {
 	}
-	
+
 	public Pair(T before, T after) {
 		this.before = before;
 		this.after = after;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("before", before)
 		.append("after", after).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public T getBefore() {
 		return before;
@@ -57,7 +57,7 @@ public final class Pair<T> {
 	public void setBefore(T before) {
 		this.before = before;
 	}
-	
+
 	public T getAfter() {
 		return after;
 	}
@@ -65,23 +65,23 @@ public final class Pair<T> {
 	public void setAfter(T after) {
 		this.after = after;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void swap() {
 		final T t = this.before;
 		this.before = this.after;
 		this.after = t;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static void swap(Pair<?> p) {
 		doSwap(p); // Nothing but capture the <?>
 	}
-	
+
 	private static <T> void doSwap(Pair<T> p) {
 		synchronized(p) {
 			final T t = p.before;

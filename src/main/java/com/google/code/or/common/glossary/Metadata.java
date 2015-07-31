@@ -26,19 +26,19 @@ import com.google.code.or.common.util.ToStringBuilder;
 import com.google.code.or.io.util.XDeserializer;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class Metadata implements Serializable {
 	//
 	private static final long serialVersionUID = 4634414541769527837L;
-	
+
 	//
 	private final byte[] type;
 	private final int[] metadata;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Metadata(byte[] type, int[] metadata) {
 		this.type = type;
@@ -46,27 +46,27 @@ public final class Metadata implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("metadata", Arrays.toString(metadata)).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte getType(int column) {
 		return this.type[column];
 	}
-	
+
 	public int getMetadata(int column) {
 		return this.metadata[column];
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final Metadata valueOf(byte[] type, byte[] data)
 	throws IOException {
@@ -85,7 +85,7 @@ public final class Metadata implements Serializable {
             	break;
             case MySQLConstants.TYPE_BIT:
             case MySQLConstants.TYPE_VARCHAR:
-			case MySQLConstants.TYPE_NEWDECIMAL:	
+			case MySQLConstants.TYPE_NEWDECIMAL:
 				metadata[i] = d.readInt(2); // Little-endian
             	break;
 			case MySQLConstants.TYPE_SET:

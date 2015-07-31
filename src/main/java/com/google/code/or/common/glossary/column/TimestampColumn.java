@@ -19,25 +19,25 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class TimestampColumn implements Column {
 	//
 	private static final long serialVersionUID = 6334849626188321306L;
-	
+
 	//
 	private final java.sql.Timestamp value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private TimestampColumn(java.sql.Timestamp value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -45,14 +45,14 @@ public final class TimestampColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public java.sql.Timestamp getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final TimestampColumn valueOf(java.sql.Timestamp value) {
 		return new TimestampColumn(value);

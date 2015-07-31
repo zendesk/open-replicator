@@ -16,7 +16,7 @@ import com.google.code.or.net.impl.packet.ResultSetRowPacket;
 import com.google.code.or.net.impl.packet.command.ComQuery;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class QueryTest {
@@ -24,7 +24,7 @@ public class QueryTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(QueryTest.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public static void main(String args[]) throws Exception {
 		//
@@ -32,19 +32,19 @@ public class QueryTest {
 		authenticator.setUser("xjq");
 		authenticator.setPassword("123456");
 		authenticator.setInitialSchema("test");
-		
+
 		//
 		final TransportImpl transport = new TransportImpl();
 		transport.setAuthenticator(authenticator);
 		transport.setSocketFactory(new SocketFactoryImpl());
 		transport.connect("localhost", 3306);
-		
+
 		//
 		final ComQuery command = new ComQuery();
 		command.setSql(StringColumn.valueOf("select * from test.abc where id < 6".getBytes()));
 		transport.getOutputStream().writePacket(command);
 		transport.getOutputStream().flush();
-		
+
 		//
 		Packet packet = transport.getInputStream().readPacket();
 		if(packet.getPacketBody()[0] == ErrorPacket.PACKET_MARKER) {
@@ -52,11 +52,11 @@ public class QueryTest {
 			LOGGER.info("{}", error);
 			return;
 		}
-		
+
 		//
 		final ResultSetHeaderPacket header = ResultSetHeaderPacket.valueOf(packet);
 		LOGGER.info("{}", header);
-		
+
 		//
 		while(true) {
 			packet = transport.getInputStream().readPacket();
@@ -69,7 +69,7 @@ public class QueryTest {
 				LOGGER.info("{}", field);
 			}
 		}
-		
+
 		//
 		while(true) {
 			packet = transport.getInputStream().readPacket();

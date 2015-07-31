@@ -21,7 +21,7 @@ import java.net.Socket;
 import com.google.code.or.io.SocketFactory;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class SocketFactoryImpl implements SocketFactory {
@@ -31,7 +31,7 @@ public class SocketFactoryImpl implements SocketFactory {
 	private int receiveBufferSize = -1;
 
 	/**
-	 * 
+	 *
 	 */
 	public Socket create(String host, int port) throws Exception {
 		final Socket r = new Socket(host, port);
@@ -40,9 +40,9 @@ public class SocketFactoryImpl implements SocketFactory {
 		if(this.receiveBufferSize > 0) r.setReceiveBufferSize(this.receiveBufferSize);
 		return r;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public boolean isKeepAlive() {
 		return keepAlive;

@@ -22,34 +22,34 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Used to log an out of the ordinary event that occurred on the master. 
- * It notifies the slave that something happened on the master that might 
- * cause data to be in an inconsistent state. 
- * 
+ * Used to log an out of the ordinary event that occurred on the master.
+ * It notifies the slave that something happened on the master that might
+ * cause data to be in an inconsistent state.
+ *
  * @author Jingqi Xu
  * @see sql/rpl_constants.h
  */
 public final class IncidentEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.INCIDENT_EVENT;
-	
+
 	//
 	private int incidentNumber;
 	private int messageLength;
 	private StringColumn message;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public IncidentEvent() {
 	}
-	
+
 	public IncidentEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -59,9 +59,9 @@ public final class IncidentEvent extends AbstractBinlogEventV4 {
 		.append("messageLength", messageLength)
 		.append("message", message).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getIncidentNumber() {
 		return incidentNumber;

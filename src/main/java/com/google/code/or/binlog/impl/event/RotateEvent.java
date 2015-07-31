@@ -22,32 +22,32 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Written when mysqld switches to a new binary log file. This occurs when someone 
- * issues a FLUSH LOGS statement or the current binary log file becomes too large. 
- * The maximum size is determined by max_binlog_size. 
- * 
+ * Written when mysqld switches to a new binary log file. This occurs when someone
+ * issues a FLUSH LOGS statement or the current binary log file becomes too large.
+ * The maximum size is determined by max_binlog_size.
+ *
  * @author Jingqi Xu
  */
 public final class RotateEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.ROTATE_EVENT;
-	
+
 	//
 	private long binlogPosition;
 	private StringColumn binlogFileName;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public RotateEvent() {
 	}
-	
+
 	public RotateEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -56,9 +56,9 @@ public final class RotateEvent extends AbstractBinlogEventV4 {
 		.append("binlogPosition", binlogPosition)
 		.append("binlogFileName", binlogFileName).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getBinlogPosition() {
 		return binlogPosition;
@@ -67,7 +67,7 @@ public final class RotateEvent extends AbstractBinlogEventV4 {
 	public void setBinlogPosition(long binlogPosition) {
 		this.binlogPosition = binlogPosition;
 	}
-	
+
 	public StringColumn getBinlogFileName() {
 		return binlogFileName;
 	}

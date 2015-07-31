@@ -20,30 +20,30 @@ import com.google.code.or.binlog.StatusVariable;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public abstract class AbstractStatusVariable implements StatusVariable {
 	//
 	protected final int type;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public AbstractStatusVariable(int type) {
 		this.type = type;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public int getType() {
 		return type;

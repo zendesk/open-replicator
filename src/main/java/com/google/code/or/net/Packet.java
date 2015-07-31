@@ -20,14 +20,14 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public interface Packet extends Serializable {
-	
+
 	int getLength();
-	
+
 	int getSequence();
-	
+
 	byte[] getPacketBody() throws IOException;
 }

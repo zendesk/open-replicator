@@ -19,22 +19,22 @@ package com.google.code.or.binlog.impl.parser;
 import com.google.code.or.binlog.BinlogEventParser;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public abstract class AbstractBinlogEventParser implements BinlogEventParser {
 	//
 	protected final int eventType;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public AbstractBinlogEventParser(int eventType) {
 		this.eventType = eventType;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public final int getEventType() {
 		return eventType;

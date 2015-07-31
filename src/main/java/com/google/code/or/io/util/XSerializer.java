@@ -25,29 +25,29 @@ import com.google.code.or.io.XOutputStream;
 import com.google.code.or.io.impl.XOutputStreamImpl;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class XSerializer implements XOutputStream {
 	//
 	private final XOutputStream tos;
 	private final ByteArrayOutputStream bos;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public XSerializer() {
 		this.bos = new ByteArrayOutputStream();
 		this.tos = new XOutputStreamImpl(this.bos);
 	}
-	
+
 	public XSerializer(int size) {
 		this.bos = new ByteArrayOutputStream(size);
 		this.tos = new XOutputStreamImpl(this.bos);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public byte[] toByteArray() {
 		flush();
@@ -55,7 +55,7 @@ public final class XSerializer implements XOutputStream {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void flush() {
 		try {
@@ -64,7 +64,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void close() throws IOException {
 		try {
 			this.tos.close();
@@ -72,7 +72,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeBytes(byte[] value) {
 		try {
 			this.tos.writeBytes(value);
@@ -80,7 +80,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeBytes(int value, int length) {
 		try {
 			this.tos.writeBytes(value, length);
@@ -96,7 +96,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeInt(int value, int length) {
 		try {
 			this.tos.writeInt(value, length);
@@ -104,7 +104,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeLong(long value, int length) {
 		try {
 			this.tos.writeLong(value, length);
@@ -112,7 +112,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeUnsignedLong(UnsignedLong value) {
 		try {
 			this.tos.writeUnsignedLong(value);
@@ -120,7 +120,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeLengthCodedString(StringColumn value) {
 		try {
 			this.tos.writeLengthCodedString(value);
@@ -136,7 +136,7 @@ public final class XSerializer implements XOutputStream {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void writeNullTerminatedString(StringColumn value) {
 		try {
 			this.tos.writeNullTerminatedString(value);

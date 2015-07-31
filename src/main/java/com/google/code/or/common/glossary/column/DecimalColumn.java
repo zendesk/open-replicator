@@ -21,29 +21,29 @@ import java.math.BigDecimal;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class DecimalColumn implements Column {
 	//
 	private static final long serialVersionUID = -3798378473095594835L;
-	
+
 	//
 	private final BigDecimal value;
 	private final int precision;
 	private final int scale;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private DecimalColumn(BigDecimal value, int precision, int scale) {
 		this.value = value;
 		this.scale = scale;
 		this.precision = precision;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -51,12 +51,12 @@ public final class DecimalColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public BigDecimal getValue() {
 		return this.value;
 	}
-	
+
 	public int getPrecision() {
 		return precision;
 	}
@@ -64,9 +64,9 @@ public final class DecimalColumn implements Column {
 	public int getScale() {
 		return scale;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final DecimalColumn valueOf(BigDecimal value, int precision, int scale) {
 		if(precision < scale) throw new IllegalArgumentException("invalid precision: " + precision + ", scale: " + scale);

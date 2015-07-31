@@ -25,18 +25,18 @@ import com.google.code.or.binlog.BinlogRowEventFilter;
 import com.google.code.or.binlog.impl.event.TableMapEvent;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class BinlogRowEventFilterImpl implements BinlogRowEventFilter {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(BinlogRowEventFilterImpl.class);
-	
+
 	//
 	private boolean verbose = true;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public boolean isVerbose() {
 		return verbose;
@@ -45,9 +45,9 @@ public class BinlogRowEventFilterImpl implements BinlogRowEventFilter {
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public boolean accepts(BinlogEventV4Header header, BinlogParserContext context, TableMapEvent event) {
 		//
@@ -57,7 +57,7 @@ public class BinlogRowEventFilterImpl implements BinlogRowEventFilter {
 			}
 			return false;
 		}
-		
+
 		//
 		return true;
 	}

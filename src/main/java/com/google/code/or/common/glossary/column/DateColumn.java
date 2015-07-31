@@ -19,25 +19,25 @@ package com.google.code.or.common.glossary.column;
 import com.google.code.or.common.glossary.Column;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class DateColumn implements Column {
 	//
 	private static final long serialVersionUID = 959710929844516680L;
-	
+
 	//
 	private final java.sql.Date value;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private DateColumn(java.sql.Date value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -45,14 +45,14 @@ public final class DateColumn implements Column {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public java.sql.Date getValue() {
 		return this.value;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static final DateColumn valueOf(java.sql.Date value) {
 		return new DateColumn(value);

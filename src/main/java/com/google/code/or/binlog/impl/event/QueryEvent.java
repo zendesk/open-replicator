@@ -25,13 +25,13 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public final class QueryEvent extends AbstractBinlogEventV4 {
 	//
 	public static final int EVENT_TYPE = MySQLConstants.QUERY_EVENT;
-	
+
 	//
 	private long threadId;
 	private long elapsedTime;
@@ -41,19 +41,19 @@ public final class QueryEvent extends AbstractBinlogEventV4 {
 	private List<StatusVariable> statusVariables;
 	private StringColumn databaseName;
 	private StringColumn sql;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public QueryEvent() {
 	}
-	
+
 	public QueryEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
@@ -68,9 +68,9 @@ public final class QueryEvent extends AbstractBinlogEventV4 {
 		.append("databaseName", databaseName)
 		.append("sql", sql).toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public long getThreadId() {
 		return threadId;

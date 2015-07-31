@@ -24,20 +24,20 @@ import com.google.code.or.binlog.impl.event.RandEvent;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class RandEventParser extends AbstractBinlogEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public RandEventParser() {
 		super(RandEvent.EVENT_TYPE);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {

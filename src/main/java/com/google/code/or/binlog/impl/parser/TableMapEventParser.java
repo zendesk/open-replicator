@@ -25,22 +25,22 @@ import com.google.code.or.common.glossary.Metadata;
 import com.google.code.or.io.XInputStream;
 
 /**
- * 
+ *
  * @author Jingqi Xu
  */
 public class TableMapEventParser extends AbstractBinlogEventParser {
-	// 
+	//
 	private boolean reusePreviousEvent = true;
 
 	/**
-	 * 
+	 *
 	 */
 	public TableMapEventParser() {
 		super(TableMapEvent.EVENT_TYPE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public boolean isReusePreviousEvent() {
 		return reusePreviousEvent;
@@ -49,9 +49,9 @@ public class TableMapEventParser extends AbstractBinlogEventParser {
 	public void setReusePreviousEvent(boolean reusePreviousEvent) {
 		this.reusePreviousEvent = reusePreviousEvent;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
@@ -65,7 +65,7 @@ public class TableMapEventParser extends AbstractBinlogEventParser {
 			context.getEventListener().onEvents(event);
 			return;
 		}
-		
+
 		//
 		final TableMapEvent event = new TableMapEvent(header);
 		event.setBinlogFilename(context.getBinlogFileName());
@@ -75,9 +75,9 @@ public class TableMapEventParser extends AbstractBinlogEventParser {
 		event.setDatabaseName(is.readNullTerminatedString());
 		event.setTableNameLength(is.readInt(1));
 		event.setTableName(is.readNullTerminatedString());
-		event.setColumnCount(is.readUnsignedLong()); 
+		event.setColumnCount(is.readUnsignedLong());
 		event.setColumnTypes(is.readBytes(event.getColumnCount().intValue()));
-		event.setColumnMetadataCount(is.readUnsignedLong()); 
+		event.setColumnMetadataCount(is.readUnsignedLong());
 		event.setColumnMetadata(Metadata.valueOf(event.getColumnTypes(), is.readBytes(event.getColumnMetadataCount().intValue())));
 		event.setColumnNullabilities(is.readBit(event.getColumnCount().intValue()));
 		context.getEventListener().onEvents(event);
