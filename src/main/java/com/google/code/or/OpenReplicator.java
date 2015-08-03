@@ -257,11 +257,16 @@ public class OpenReplicator {
 	protected void setupChecksumState() throws Exception {
 		final Query query = new Query(this.transport);
 
-		List<String> cols = query.getFirst("SELECT @@global.binlog_checksum");
+		try {
+			List<String> cols = query.getFirst("SELECT @@global.binlog_checksum");
 
-		if ( cols != null && cols.get(0).equals("CRC32") ) {
-			this.binlogParser.setChecksumEvents(true);
-			query.getFirst("SET @master_binlog_checksum = @@global.binlog_checksum");
+			if ( cols != null && cols.get(0).equals("CRC32") ) {
+				this.binlogParser.setChecksumEvents(true);
+				query.getFirst("SET @master_binlog_checksum = @@global.binlog_checksum");
+			}
+		} catch ( TransportException e ) {
+			if ( e.getErrorCode() != 1193 ) // ignore no-such-variable errors on mysql 5.5
+				throw e;
 		}
 	}
 	/**

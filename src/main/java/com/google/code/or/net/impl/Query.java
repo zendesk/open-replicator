@@ -1,5 +1,7 @@
 package com.google.code.or.net.impl;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.code.or.common.glossary.column.StringColumn;
 import com.google.code.or.net.Packet;
 import com.google.code.or.net.Transport;
+import com.google.code.or.net.TransportException;
 import com.google.code.or.net.impl.packet.EOFPacket;
 import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.ResultSetHeaderPacket;
@@ -23,7 +26,7 @@ public class Query {
 		this.transport = transport;
 	}
 
-	public List<String> getFirst(String sql) throws Exception {
+	public List<String> getFirst(String sql) throws IOException, TransportException {
 		List<String> result = null;
 
 		final ComQuery command = new ComQuery();
@@ -34,8 +37,7 @@ public class Query {
 		//
 		Packet packet = transport.getInputStream().readPacket();
 		if(packet.getPacketBody()[0] == ErrorPacket.PACKET_MARKER) {
-			final ErrorPacket error = ErrorPacket.valueOf(packet);
-			throw new RuntimeException(error.toString());
+			throw new TransportException(ErrorPacket.valueOf(packet));
 		}
 
 		ResultSetHeaderPacket header = ResultSetHeaderPacket.valueOf(packet);
