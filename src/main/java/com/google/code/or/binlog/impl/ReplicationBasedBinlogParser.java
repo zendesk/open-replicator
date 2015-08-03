@@ -93,7 +93,6 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				int packetLength = is.readInt(3);
 				final int packetSequence = is.readInt(1);
 
-				LOGGER.info("setting packetLimit to {}", packetLength);
 				is.setReadLimit(packetLength); // Ensure the packet boundary
 
 				//
@@ -123,7 +122,6 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				if ( context.getChecksumEnabled() )
 					eventLimit -= 4;
 
-				LOGGER.info("setting totalLimit to {}", eventLimit);
 				is.setTotalLimit(eventLimit);
 
 				header.setNextPosition(is.readLong(4));
