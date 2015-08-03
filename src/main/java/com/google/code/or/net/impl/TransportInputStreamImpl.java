@@ -19,6 +19,8 @@ package com.google.code.or.net.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+
 import com.google.code.or.io.impl.XInputStreamImpl;
 import com.google.code.or.net.Packet;
 import com.google.code.or.net.TransportInputStream;
@@ -117,20 +119,24 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 				&& this.readLimit == TransportInputStreamImpl.MAX_PACKET_SIZE ) {
 
 			// consume from middle of buffer to end of packet.
-			int first_len = this.readLimit - this.readCount;
-			super.read(b, off, first_len);
+			int remaining_length = this.readLimit - this.readCount;
+			super.read(b, off, remaining_length);
 
 			// read next header
 			this.setReadLimit(0);
+
 			int nextPacketLength = this.readInt(3);
 			this.readInt(1); // consume packet sequence #
+			this.totalRead -= 4; // Don't count packet headers towards total event length.
+
 
 			this.setReadLimit(nextPacketLength);
-			left -= first_len;
-			off += first_len;
+
+			left -= remaining_length;
+			off += remaining_length;
 		}
 
-		// now consume whatever's left,
+		// now consume whatever's left
 		super.read(b, off, left);
 
 		if ( this.totalRead != null )
