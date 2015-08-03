@@ -117,6 +117,8 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				header.setServerId(is.readLong(4));
 				header.setEventLength(is.readInt(4));
 
+				// setup the total event length; this is different than setReadLimit(),
+				// as setReadLimit refers to *packet* length.
 				long eventLimit = header.getEventLength() - 13;
 				if ( context.getChecksumEnabled() )
 					eventLimit -= 4;
@@ -146,10 +148,9 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				}
 
 				if ( context.getChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT) {
-                    is.setReadLimit(0);
-                    is.setTotalLimit(0);
+					is.setReadLimit(0);
+					is.setTotalLimit(0);
 					Long checksum = is.readLong(4);
-					LOGGER.info("checksum: {} header: {}", checksum, header);
 				}
 
 			} finally {
