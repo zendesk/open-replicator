@@ -24,7 +24,10 @@ import com.google.code.or.io.XInputStream;
  *
  * @author Jingqi Xu
  */
-public interface TransportInputStream extends XInputStream {
 
+public interface TransportInputStream extends XInputStream {
 	Packet readPacket() throws IOException;
+
+	public int currentPacketLength();
+	public int currentPacketSequence();
 }

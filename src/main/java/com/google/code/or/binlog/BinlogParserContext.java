@@ -23,6 +23,9 @@ import com.google.code.or.binlog.impl.event.TableMapEvent;
  * @author Jingqi Xu
  */
 public interface BinlogParserContext {
+	boolean getChecksumEnabled();
+	void setChecksumEnabled(boolean flag);
+
 
 	String getBinlogFileName();
 

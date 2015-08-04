@@ -117,4 +117,12 @@ public class XDeserializer implements XInputStream {
 	public BitColumn readBit(int length, boolean littleEndian) throws IOException {
 		return tis.readBit(length, littleEndian);
 	}
+
+	public int read(byte[] b, int off, int len) throws IOException {
+		return tis.read(b, off, len);
+	}
+
+	public int read() throws IOException {
+		return tis.read();
+	}
 }

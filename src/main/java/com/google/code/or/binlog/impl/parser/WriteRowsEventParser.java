@@ -53,7 +53,6 @@ public class WriteRowsEventParser extends AbstractRowEventParser {
 			return;
 		}
 
-		//
 		final WriteRowsEvent event = new WriteRowsEvent(header);
 		event.setBinlogFilename(context.getBinlogFileName());
 		event.setTableId(tableId);

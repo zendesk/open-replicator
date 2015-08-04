@@ -45,9 +45,10 @@ public class WriteRowsEventV2Parser extends AbstractRowEventParser {
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context)
 	throws IOException {
-		//
 		final long tableId = is.readLong(6);
 		final TableMapEvent tme = context.getTableMapEvent(tableId);
+
+
 		if(this.rowEventFilter != null && !this.rowEventFilter.accepts(header, context, tme)) {
 			is.skip(is.available());
 			return;
