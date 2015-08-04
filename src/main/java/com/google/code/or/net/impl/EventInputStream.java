@@ -29,11 +29,6 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 
 		this.setReadLimit(0);
 
-		if ( isChecksumEnabled() )
-			crc = new CRC32();
-		else
-			crc = null;
-
 		final int packetMarker = readInt(1);
 		if(packetMarker != OKPacket.PACKET_MARKER) { // 0x00
 			if((byte)packetMarker == ErrorPacket.PACKET_MARKER) {
@@ -47,8 +42,12 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 			}
 		}
 
+		if ( isChecksumEnabled() ) {
+			crc = new CRC32();
+		} else
+			crc = null;
 
-		// these reads don't coun
+
 		header.setTimestamp(readLong(4) * 1000L);
 		header.setEventType(readInt(1));
 		header.setServerId(readLong(4));
@@ -87,9 +86,9 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 		}
 
 		if ( isChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT) {
+			long calculatedCRC = crc.getValue();
 			this.setReadLimit(0);
 			Long checksum = this.readLong(4);
-			System.out.println("checksum: " + checksum + " calculated: " + crc.getValue());
 		}
 	}
 
@@ -112,8 +111,9 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 		this.readCount += len;
 		int ret = packetStream.read(b, off, len);
 
-		if ( isChecksumEnabled() && crc != null )
+		if ( isChecksumEnabled() && crc != null ) {
 			crc.update(b, off, len);
+		}
 
 		return ret;
 	}
