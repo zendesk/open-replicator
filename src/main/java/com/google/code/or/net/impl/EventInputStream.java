@@ -6,6 +6,7 @@ import java.util.zip.CRC32;
 
 import com.google.code.or.binlog.impl.event.BinlogEventV4HeaderImpl;
 import com.google.code.or.common.util.MySQLConstants;
+import com.google.code.or.io.CRCException;
 import com.google.code.or.io.XInputStream;
 import com.google.code.or.io.impl.XInputStreamImpl;
 import com.google.code.or.net.Packet;
@@ -89,6 +90,9 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 			long calculatedCRC = crc.getValue();
 			this.setReadLimit(0);
 			Long checksum = this.readLong(4);
+			if ( checksum.longValue() != calculatedCRC ) {
+				throw new CRCException(header);
+			}
 		}
 	}
 
@@ -99,8 +103,8 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 			return packetStream.skip(n);
 		} else {
 			byte b[] = new byte[(int) n];
+			// let read calculate the CRC
 			read(b, 0, (int) n);
-			crc.update(b, 0, (int) n);
 		}
 		return n;
 

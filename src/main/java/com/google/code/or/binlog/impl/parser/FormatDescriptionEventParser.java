@@ -63,8 +63,10 @@ public class FormatDescriptionEventParser extends AbstractBinlogEventParser {
 
 		event.setEventTypes(eventTypeBuffer);
 
-		// for mysql 5.6, there will always be space for a checksum in the FormatDescriptionEvent, even if checksums are off.
-		// if checksums are off, the checksumming code up above will not consume the 4 bytes, so we need to.
+		// for mysql 5.6, there will always be space for a checksum in the FormatDescriptionEvent, even if checksums are off,
+		// but our checksumming code will not have been active, so we don't bother to verify the checksum
+		// of the formatLogDescription event.
+
 		if ( event.checksumPossible() ) {
 			is.readBytes(4);
 		}
