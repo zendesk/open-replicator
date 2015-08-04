@@ -123,6 +123,6 @@ public class XDeserializer implements XInputStream {
 	}
 
 	public int read() throws IOException {
-		return this.read();
+		return tis.read();
 	}
 }

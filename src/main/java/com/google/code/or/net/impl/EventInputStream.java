@@ -83,7 +83,8 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 	public void finishEvent(BinlogEventV4HeaderImpl header) throws IOException {
 		// Ensure the packet boundary
 		if(this.available() != 0) {
-			throw new RuntimeException("assertion failed, available: " + this.available() + ", event type: " + header.getEventType());
+			throw new RuntimeException("assertion failed!  We left " + this.available() +
+					"unconsumed bytes in the buffer for event: " + header);
 		}
 
 		if ( isChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT) {
