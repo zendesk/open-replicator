@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.code.or.io.impl.XInputStreamImpl;
 import com.google.code.or.net.Packet;
@@ -32,81 +33,59 @@ import com.google.code.or.net.impl.packet.RawPacket;
  */
 public class TransportInputStreamImpl extends XInputStreamImpl implements TransportInputStream {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(TransportInputStreamImpl.class);
 	private static final int MAX_PACKET_SIZE = 0xFFFFFF;
-	private Long totalLimit;
-	private Long totalRead;
+	private int currentPacketSequence;
 
 	/**
 	 *
 	 */
 	public TransportInputStreamImpl(InputStream is) {
 		super(is);
+		this.readLimit = this.readCount = 0;
 	}
 
 	public TransportInputStreamImpl(InputStream is, int size) {
 		super(is, size);
+		this.readLimit = this.readCount = 0;
 	}
 
 	/**
 	 *
 	 */
 	public Packet readPacket() throws IOException {
-		//
-		final RawPacket r = new RawPacket();
-		r.setLength(readInt(3));
-		r.setSequence(readInt(1));
+		final RawPacket r = readPacketHeader();
 
-		//
-		int total = 0;
 		final byte[] body = new byte[r.getLength()];
-		while(total < body.length) {
-			total += this.read(body, total, body.length - total);
-		}
+
+		this.read(body, 0,  r.getLength());
 		r.setPacketBody(body);
+
 		return r;
 	}
 
-	public void setTotalLimit(long limit) {
-		this.totalLimit = limit;
-		this.totalRead = 0L;
+	private RawPacket readPacketHeader() throws IOException {
+		final RawPacket r = new RawPacket();
+
+		// read next header
+		this.setReadLimit(4);
+		int packetLength  = this.readInt(3);
+		this.currentPacketSequence = this.readInt(1); // consume packet sequence #
+
+		this.setReadLimit(packetLength);
+		r.setLength(packetLength);
+		r.setSequence(this.currentPacketSequence);
+
+		return r;
 	}
 
-	// here we diverge from the standard "what's there in the buffer" implementation
-	// and convince the calling code that there's more in the buffer, letting the end-of-buffer
-	// code in read() kick in.
-
-	@Override
-	public int available() throws IOException {
-		if ( this.totalLimit == null )
-			return super.available();
-		else
-			return (int) (this.totalLimit - this.totalRead);
-	};
-
-	@Override
-	public boolean hasMore() throws IOException {
-		if ( this.totalLimit == null )
-			return super.hasMore();
-		else
-			return this.totalLimit - this.totalRead > 0;
-	};
-
-	@Override
-	public long skip(long n) throws IOException {
-		long res = super.skip(n);
-		if ( this.totalRead != null )
-			this.totalRead += res;
-		return res;
-	};
-
+	// TODO: could fall off the edge
 	@Override
 	public int read() throws IOException {
-		int retval = super.read();
-
-		if ( this.totalRead != null )
-			this.totalRead++;
-
-		return retval;
+		if ( this.readCount + 1 > this.readLimit ) {
+			readPacketHeader();
+		}
+		return super.read();
 	}
 
 	@Override
@@ -115,22 +94,13 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 
 		// if we're about to read off the end of read-limit, see if this is a response
 		// that spans multiple packets.
-		while ( this.readLimit > 0 && (this.readCount + left) > this.readLimit
-				&& this.readLimit == TransportInputStreamImpl.MAX_PACKET_SIZE ) {
+		while ( (this.readCount + left) > this.readLimit ) {
 
 			// consume from middle of buffer to end of packet.
 			int remaining_length = this.readLimit - this.readCount;
 			super.read(b, off, remaining_length);
 
-			// read next header
-			this.setReadLimit(0);
-
-			int nextPacketLength = this.readInt(3);
-			this.readInt(1); // consume packet sequence #
-			this.totalRead -= 4; // Don't count packet headers towards total event length.
-
-
-			this.setReadLimit(nextPacketLength);
+			readPacketHeader();
 
 			left -= remaining_length;
 			off += remaining_length;
@@ -139,9 +109,14 @@ public class TransportInputStreamImpl extends XInputStreamImpl implements Transp
 		// now consume whatever's left
 		super.read(b, off, left);
 
-		if ( this.totalRead != null )
-			this.totalRead += len;
-
 		return len;
+	}
+
+	public int currentPacketLength() {
+		return this.readLimit;
+	}
+
+	public int currentPacketSequence() {
+		return this.currentPacketSequence;
 	}
 }

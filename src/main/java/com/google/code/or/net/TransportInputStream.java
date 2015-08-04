@@ -26,7 +26,8 @@ import com.google.code.or.io.XInputStream;
  */
 
 public interface TransportInputStream extends XInputStream {
-	public void setTotalLimit(long limit);
-
 	Packet readPacket() throws IOException;
+
+	public int currentPacketLength();
+	public int currentPacketSequence();
 }

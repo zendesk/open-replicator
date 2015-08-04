@@ -27,6 +27,7 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.io.XInputStream;
 import com.google.code.or.net.Transport;
 import com.google.code.or.net.TransportInputStream;
+import com.google.code.or.net.impl.EventInputStream;
 import com.google.code.or.net.impl.packet.EOFPacket;
 import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.OKPacket;
@@ -86,74 +87,27 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	protected void doParse() throws Exception {
 		//
 		final TransportInputStream is = this.transport.getInputStream();
+		final EventInputStream es = new EventInputStream(is);
+
 		final Context context = new Context(this);
+
+		BinlogEventV4HeaderImpl header;
 		while(isRunning()) {
-			try {
-				// Parse packet
-				int packetLength = is.readInt(3);
-				final int packetSequence = is.readInt(1);
+			header = es.getNextBinlogHeader();
 
-				is.setReadLimit(packetLength); // Ensure the packet boundary
-
-				//
-				final int packetMarker = is.readInt(1);
-				if(packetMarker != OKPacket.PACKET_MARKER) { // 0x00
-					if((byte)packetMarker == ErrorPacket.PACKET_MARKER) {
-						final ErrorPacket packet = ErrorPacket.valueOf(packetLength, packetSequence, packetMarker, is);
-						throw new RuntimeException(packet.toString());
-					} else if((byte)packetMarker == EOFPacket.PACKET_MARKER) {
-						final EOFPacket packet = EOFPacket.valueOf(packetLength, packetSequence, packetMarker, is);
-						throw new RuntimeException(packet.toString());
-					} else {
-						throw new RuntimeException("assertion failed, invalid packet marker: " + packetMarker);
-					}
-				}
-
-				// Parse the event header
-				final BinlogEventV4HeaderImpl header = new BinlogEventV4HeaderImpl();
-				header.setTimestamp(is.readLong(4) * 1000L);
-				header.setEventType(is.readInt(1));
-				header.setServerId(is.readLong(4));
-				header.setEventLength(is.readInt(4));
-
-				// setup the total event length; this is different than setReadLimit(),
-				// as setReadLimit refers to *packet* length.
-				long eventLimit = header.getEventLength() - 13;
-				if ( context.getChecksumEnabled() )
-					eventLimit -= 4;
-
-				is.setTotalLimit(eventLimit);
-
-				header.setNextPosition(is.readLong(4));
-				header.setFlags(is.readInt(2));
-				header.setTimestampOfReceipt(System.currentTimeMillis());
-				if(isVerbose() && LOGGER.isInfoEnabled()) {
-					LOGGER.info("received an event, sequence: {}, header: {}", packetSequence, header);
-				}
-
-				// Parse the event body
-				if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
-					this.defaultParser.parse(is, header, context);
-				} else {
-					BinlogEventParser parser = getEventParser(header.getEventType());
-					if(parser == null) parser = this.defaultParser;
-					parser.parse(is, header, context);
-				}
-
-				// Ensure the packet boundary
-				if(is.available() != 0) {
-					throw new RuntimeException("assertion failed, available: " + is.available() + ", event type: " + header.getEventType());
-				}
-
-				if ( context.getChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT) {
-					is.setReadLimit(0);
-					is.setTotalLimit(0);
-					Long checksum = is.readLong(4);
-				}
-
-			} finally {
-				is.setReadLimit(0);
+			// Parse the event body
+			if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
+				this.defaultParser.parse(is, header, context);
+			} else {
+				BinlogEventParser parser = getEventParser(header.getEventType());
+				if(parser == null) parser = this.defaultParser;
+				parser.parse(es, header, context);
 			}
+
+			if ( header.getEventType() == MySQLConstants.FORMAT_DESCRIPTION_EVENT )
+				es.setChecksumEnabled(context.getChecksumEnabled());
+
+			es.finishEvent(header);
 		}
 	}
 }

@@ -44,6 +44,7 @@ import com.google.code.or.binlog.impl.parser.WriteRowsEventParser;
 import com.google.code.or.binlog.impl.parser.WriteRowsEventV2Parser;
 import com.google.code.or.binlog.impl.parser.XidEventParser;
 import com.google.code.or.common.glossary.column.StringColumn;
+import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.io.impl.SocketFactoryImpl;
 import com.google.code.or.net.Packet;
 import com.google.code.or.net.Transport;
