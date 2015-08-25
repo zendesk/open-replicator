@@ -57,7 +57,7 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 		// setup the total event length; this is different than setReadLimit(),
 		// as setReadLimit refers to *packet* length.
 		long eventLimit = header.getEventLength() - 13;
-		if ( isChecksumEnabled() )
+		if ( isChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT )
 			eventLimit -= 4;
 
 		// TODO fixme re: int overflow
@@ -84,7 +84,7 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 		// Ensure the packet boundary
 		if(this.available() != 0) {
 			throw new RuntimeException("assertion failed!  We left " + this.available() +
-					"unconsumed bytes in the buffer for event: " + header);
+					" unconsumed bytes in the buffer for event: " + header);
 		}
 
 		if ( isChecksumEnabled() && header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT) {
