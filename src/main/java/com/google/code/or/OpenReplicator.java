@@ -260,8 +260,7 @@ public class OpenReplicator {
 		try {
 			List<String> cols = query.getFirst("SELECT @@global.binlog_checksum");
 
-			if ( cols != null && cols.get(0).equals("CRC32") ) {
-				this.binlogParser.setChecksumEvents(true);
+			if ( cols != null && cols.get(0).equals("CRC32") || cols.get(0).equals("NONE")) {
 				query.getFirst("SET @master_binlog_checksum = @@global.binlog_checksum");
 			}
 		} catch ( TransportException e ) {

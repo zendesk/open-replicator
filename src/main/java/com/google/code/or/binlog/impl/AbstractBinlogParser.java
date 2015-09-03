@@ -55,7 +55,6 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 	protected BinlogEventFilter eventFilter;
 	protected BinlogEventListener eventListener;
 	protected boolean clearTableMapEventsOnRotate = true;
-	protected boolean checksumEvents = false;
 
 	protected final List<BinlogParserListener> parserListeners;
 	protected final AtomicBoolean verbose = new AtomicBoolean(false);
@@ -198,14 +197,6 @@ public abstract class AbstractBinlogParser implements BinlogParser {
 	public BinlogEventParser unregistgerEventParser(int type) {
 		return unregisterEventParser(type);
 	}
-
-	public boolean getChecksumEvents() {
-		return checksumEvents;
-	}
-	public void setChecksumEvents(boolean checksumEvents) {
-		this.checksumEvents = checksumEvents;
-	}
-
 
 	public void setEventParsers(List<BinlogEventParser> parsers) {
 		clearEventParsers();
