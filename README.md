@@ -6,19 +6,23 @@ Open Replicator is a high performance MySQL binlog parser written in Java. It un
 
 ### releases
 1.3.0
+
     released: 2015-09-09
     support mysql 5.6 and binlog_checksums
 
 1.2.1
+
     released: 2015-06-16
     notify io reader thread on exception from buffered stream reader, so it doesn't wait infinitely
 
 1.2.0
+
     released: 2015-03-08
     preserve invalid datetime values (0000-00-00, anyone?) as longs inside the datetime
 
 
 1.1.2
+
     released: 2015-02-20
     expose binlog filename in event stream
     rescue EOFException around doParse(); it's normal when the stream is closed
