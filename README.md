@@ -3,11 +3,12 @@ open-replicator
 
 Open Replicator is a high performance MySQL binlog parser written in Java. It unfolds the possibilities that you can parse, filter and broadcast the binlog events in a real time manner.
 
-### note
-
-For MySQL 5.6.6 users, binlog_checksum system variable is NOT supported by open-replicator at the moment, please set it to NONE.
 
 ### releases
+1.3.0
+    released: 2015-09-09
+    support mysql 5.6 and binlog_checksums
+
 1.2.1
     released: 2015-06-16
     notify io reader thread on exception from buffered stream reader, so it doesn't wait infinitely
@@ -40,9 +41,9 @@ For MySQL 5.6.6 users, binlog_checksum system variable is NOT supported by open-
 ### maven
 ```
 <dependency>
-        <groupId>open-replicator</groupId>
+        <groupId>com.zendesk</groupId>
         <artifactId>open-replicator</artifactId>
-        <version>1.0.7</version>
+        <version>1.3.0</version>
 </dependency>
 ```
 ### parsers
