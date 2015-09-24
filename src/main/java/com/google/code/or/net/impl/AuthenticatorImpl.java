@@ -30,6 +30,7 @@ import com.google.code.or.net.Transport;
 import com.google.code.or.net.TransportContext;
 import com.google.code.or.net.TransportException;
 import com.google.code.or.net.impl.packet.ErrorPacket;
+import com.google.code.or.net.impl.packet.EOFPacket;
 import com.google.code.or.net.impl.packet.OKPacket;
 import com.google.code.or.net.impl.packet.RawPacket;
 
@@ -86,6 +87,9 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 			final ErrorPacket error = ErrorPacket.valueOf(response);
 			LOGGER.info("login failed, user: {}, error: {}", this.user, error);
 			throw new TransportException(error);
+		} else if(response.getPacketBody()[0] == EOFPacket.PACKET_MARKER) {
+			LOGGER.info("Old style password authentication is not supported, upgrade user {} to a new style password or specify a different user", this.user);
+			throw new RuntimeException("Old style password authentication not supported");
 		} else if(response.getPacketBody()[0] == OKPacket.PACKET_MARKER) {
 			final OKPacket ok = OKPacket.valueOf(response);
 			LOGGER.info("login successfully, user: {}, detail: {}", this.user, ok);
