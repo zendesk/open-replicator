@@ -24,7 +24,7 @@ import com.google.code.or.common.util.ToStringBuilder;
  * Generated for a commit of a transaction that modifies one or more tables of an XA-capable storage engine.
  * Normal transactions are implemented by sending a QUERY_EVENT containing a BEGIN statement and a QUERY_EVENT
  * containing a COMMIT statement (or a ROLLBACK statement if the transaction is rolled back).
- * Strictly speaking, Xid_log_event is used if thd->transaction.xid_state.xid.get_my_xid() returns non-zero.
+ * Strictly speaking, Xid_log_event is used if thd-&gt;transaction.xid_state.xid.get_my_xid() returns non-zero.
  *
  * @author Jingqi Xu
  */

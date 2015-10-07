@@ -19,7 +19,7 @@ package com.google.code.or.net;
 /**
  *
  * @author Jingqi Xu
- * @see http://forge.mysql.com/wiki/MySQL_Internals
+ * @see "http://forge.mysql.com/wiki/MySQL_Internals"
  */
 public interface Transport {
 

@@ -27,7 +27,7 @@ import com.google.code.or.common.util.ToStringBuilder;
  * cause data to be in an inconsistent state.
  *
  * @author Jingqi Xu
- * @see sql/rpl_constants.h
+ * @see "sql/rpl_constants.h"
  */
 public final class IncidentEvent extends AbstractBinlogEventV4 {
 	//

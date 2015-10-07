@@ -23,7 +23,7 @@ import java.util.Calendar;
 /**
  *
  * @author Jingqi Xu
- * @see tungsten replicator
+ * @see "tungsten replicator"
  */
 public final class MySQLUtils {
 	//

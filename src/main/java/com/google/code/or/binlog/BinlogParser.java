@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  *
  * @author Jingqi Xu
- * @see http://forge.mysql.com/wiki/MySQL_Internals
+ * @see "http://forge.mysql.com/wiki/MySQL_Internals"
  */
 public interface BinlogParser {
 

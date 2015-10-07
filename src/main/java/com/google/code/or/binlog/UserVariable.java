@@ -19,7 +19,7 @@ package com.google.code.or.binlog;
 /**
  *
  * @author Jingqi Xu
- * @see include/mysql_com.h
+ * @see "include/mysql_com.h"
  */
 public interface UserVariable {
 

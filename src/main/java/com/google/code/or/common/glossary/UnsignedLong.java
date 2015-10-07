@@ -23,7 +23,7 @@ import com.google.code.or.common.util.CodecUtils;
 /**
  *
  * @author Jingqi Xu
- * @see sql-common/pack.c net_store_length()
+ * @see "sql-common/pack.c net_store_length()"
  */
 public abstract class UnsignedLong extends Number implements Comparable<UnsignedLong> {
 	//
