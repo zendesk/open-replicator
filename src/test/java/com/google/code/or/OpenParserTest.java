@@ -1,31 +1,18 @@
 package com.google.code.or;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
-
-import com.google.code.or.binlog.impl.event.WriteRowsEvent;
+import com.google.code.or.binlog.impl.event.WriteRowsEventV2;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.code.or.binlog.BinlogEventListener;
 import com.google.code.or.binlog.BinlogEventV4;
-import com.google.code.or.binlog.impl.event.XidEvent;
 
 public class OpenParserTest {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenParserTest.class);
-	private static final OnetimeServer onetimeServer = new OnetimeServer("5.5");
-
-	@BeforeClass
-	public static void BootOnetimeServer() throws Exception {
-		onetimeServer.boot();
-	}
 
 	static int eventCount;
 	@Test
@@ -47,8 +34,7 @@ public class OpenParserTest {
 		eventCount = 0;
 		op.setBinlogEventListener(new BinlogEventListener() {
 			public void onEvents(BinlogEventV4 event) {
-				LOGGER.info("received event: {}", event);
-				if ( event instanceof WriteRowsEvent ) {
+				if (event instanceof WriteRowsEventV2) {
 					eventCount++;
 				}
 			}
