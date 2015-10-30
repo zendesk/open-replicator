@@ -16,6 +16,7 @@
  */
 package com.google.code.or.binlog.impl;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -80,12 +81,26 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 		this.binlogFileName = binlogFileName;
 	}
 
+	private void readPacketMarker(TransportInputStream ts) throws IOException {
+		final int packetMarker = ts.readInt(1);
+		if(packetMarker != OKPacket.PACKET_MARKER) { // 0x00
+			if((byte)packetMarker == ErrorPacket.PACKET_MARKER) {
+				final ErrorPacket packet = ErrorPacket.valueOf(ts.currentPacketLength(), ts.currentPacketSequence(), packetMarker, ts);
+				throw new RuntimeException(packet.toString());
+			} else if((byte)packetMarker == EOFPacket.PACKET_MARKER) {
+				final EOFPacket packet = EOFPacket.valueOf(ts.currentPacketLength(), ts.currentPacketSequence(), packetMarker, ts);
+				throw new RuntimeException(packet.toString());
+			} else {
+				throw new RuntimeException("assertion failed, invalid packet marker: " + packetMarker);
+			}
+		}
+	}
+
 	/**
 	 *
 	 */
 	@Override
 	protected void doParse() throws Exception {
-		//
 		final TransportInputStream is = this.transport.getInputStream();
 		final EventInputStream es = new EventInputStream(is);
 
@@ -93,6 +108,7 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 
 		BinlogEventV4HeaderImpl header;
 		while(isRunning()) {
+			readPacketMarker(is);
 			header = es.getNextBinlogHeader();
 
 			// Parse the event body

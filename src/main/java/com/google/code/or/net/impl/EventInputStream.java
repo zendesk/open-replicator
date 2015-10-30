@@ -16,32 +16,19 @@ import com.google.code.or.net.impl.packet.ErrorPacket;
 import com.google.code.or.net.impl.packet.OKPacket;
 
 public class EventInputStream extends XInputStreamImpl implements XInputStream {
-	private final TransportInputStream packetStream;
+	private final XInputStream dataStream;
 	private boolean checksumEnabled = false;
 	private CRC32 crc = null;
 
-	public EventInputStream(TransportInputStream is) {
+	public EventInputStream(XInputStream is) {
 		super((InputStream) is);
-		this.packetStream = is;
+		this.dataStream = is;
 	}
 
 	public BinlogEventV4HeaderImpl getNextBinlogHeader() throws IOException {
 		final BinlogEventV4HeaderImpl header = new BinlogEventV4HeaderImpl();
 
 		this.setReadLimit(0);
-
-		final int packetMarker = readInt(1);
-		if(packetMarker != OKPacket.PACKET_MARKER) { // 0x00
-			if((byte)packetMarker == ErrorPacket.PACKET_MARKER) {
-				final ErrorPacket packet = ErrorPacket.valueOf(packetStream.currentPacketLength(), packetStream.currentPacketSequence(), packetMarker, this.packetStream);
-				throw new RuntimeException(packet.toString());
-			} else if((byte)packetMarker == EOFPacket.PACKET_MARKER) {
-				final EOFPacket packet = EOFPacket.valueOf(packetStream.currentPacketLength(), packetStream.currentPacketSequence(), packetMarker, this.packetStream);
-				throw new RuntimeException(packet.toString());
-			} else {
-				throw new RuntimeException("assertion failed, invalid packet marker: " + packetMarker);
-			}
-		}
 
 		if ( isChecksumEnabled() ) {
 			crc = new CRC32();
@@ -101,7 +88,7 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 	public long skip(final long n) throws IOException {
 		if ( !isChecksumEnabled() ) {
 			this.readCount += n;
-			return packetStream.skip(n);
+			return dataStream.skip(n);
 		} else {
 			byte b[] = new byte[(int) n];
 			// let read calculate the CRC
@@ -114,7 +101,7 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 	@Override
 	public int read(final byte b[], int off, final int len) throws IOException {
 		this.readCount += len;
-		int ret = packetStream.read(b, off, len);
+		int ret = dataStream.read(b, off, len);
 
 		if ( isChecksumEnabled() && crc != null ) {
 			crc.update(b, off, len);
@@ -125,7 +112,7 @@ public class EventInputStream extends XInputStreamImpl implements XInputStream {
 
 	@Override
 	public int read() throws IOException {
-		int b = packetStream.read();
+		int b = dataStream.read();
 		this.readCount++;
 		if ( isChecksumEnabled() && crc != null )
 			crc.update(b);
