@@ -1,46 +1,47 @@
 package com.google.code.or;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
-
+import com.google.code.or.binlog.impl.event.WriteRowsEventV2;
+import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.junit.Test;
+
 import com.google.code.or.binlog.BinlogEventListener;
 import com.google.code.or.binlog.BinlogEventV4;
-import com.google.code.or.binlog.impl.event.XidEvent;
 
 public class OpenParserTest {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenParserTest.class);
 
-	/**
-	 *
-	 */
-	public static void main(String args[]) throws Exception {
-		//
+	static int eventCount;
+	@Test
+	public void TestParserWithChecksums() throws Exception {
+		OnetimeServer fiveSixServer = new OnetimeServer("5.6");
+
+		fiveSixServer.boot();
+		fiveSixServer.execute("create database foo");
+		fiveSixServer.execute("create table foo.bar ( id int(10) primary key )");
+		fiveSixServer.execute("insert into foo.bar set id = 1");
+		fiveSixServer.execute("insert into foo.bar set id = 2");
+
 		final OpenParser op = new OpenParser();
+
 		op.setStartPosition(4);
-		op.setBinlogFileName("mysql_bin.000031");
-		op.setBinlogFilePath("C:/Documents and Settings/All Users/Application Data/MySQL/MySQL Server 5.5/data");
+		op.setBinlogFileName("master.000001");
+		op.setBinlogFilePath(fiveSixServer.mysqlPath);
+
+		eventCount = 0;
 		op.setBinlogEventListener(new BinlogEventListener() {
-		    public void onEvents(BinlogEventV4 event) {
-		    	if(event instanceof XidEvent) {
-		    		LOGGER.info("{}", event);
-		    	}
-		    }
+			public void onEvents(BinlogEventV4 event) {
+				if (event instanceof WriteRowsEventV2) {
+					eventCount++;
+				}
+			}
 		});
 		op.start();
+		Thread.sleep(1000);
 
-		//
-		LOGGER.info("press 'q' to stop");
-		final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		for(String line = br.readLine(); line != null; line = br.readLine()) {
-		    if(line.equals("q")) {
-		        op.stop(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-		        break;
-		    }
-		}
+		assert(eventCount == 2);
 	}
 }

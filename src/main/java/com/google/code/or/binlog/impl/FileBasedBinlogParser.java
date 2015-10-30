@@ -19,6 +19,7 @@ package com.google.code.or.binlog.impl;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import com.google.code.or.net.impl.EventInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,18 +106,12 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 	protected void doParse() throws Exception {
 		//
 		final Context context = new Context(this);
+		final EventInputStream es = new EventInputStream(is);
+
 		while(isRunning() && is.available() > 0) {
+			final BinlogEventV4HeaderImpl header = es.getNextBinlogHeader();
 			try {
-				//
-				final BinlogEventV4HeaderImpl header = new BinlogEventV4HeaderImpl();
-				header.setTimestamp(is.readLong(4) * 1000L);
-				header.setEventType(is.readInt(1));
-				header.setServerId(is.readLong(4));
-				header.setEventLength(is.readInt(4));
-				header.setNextPosition(is.readLong(4));
-				header.setFlags(is.readInt(2));
-				header.setTimestampOfReceipt(System.currentTimeMillis());
-				is.setReadLimit((int)(header.getEventLength() - header.getHeaderLength())); // Ensure the event boundary
+
 				if(isVerbose() && LOGGER.isInfoEnabled()) {
 					LOGGER.info("read an event, header: {}", header);
 				}
@@ -128,17 +123,17 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 
 				// Parse the event body
 				if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
-					this.defaultParser.parse(is, header, context);
+					this.defaultParser.parse(es, header, context);
 				} else {
 					BinlogEventParser parser = getEventParser(header.getEventType());
 					if(parser == null) parser = this.defaultParser;
-					parser.parse(is, header, context);
+					parser.parse(es, header, context);
 				}
 
-				// Ensure the packet boundary
-				if(is.available() != 0) {
-					throw new RuntimeException("assertion failed, available: " + is.available() + ", event type: " + header.getEventType());
-				}
+				if ( header.getEventType() == MySQLConstants.FORMAT_DESCRIPTION_EVENT )
+					es.setChecksumEnabled(context.getChecksumEnabled());
+
+				es.finishEvent(header);
 			} catch(Exception e) {
 				IOUtils.closeQuietly(is);
 				throw e;
