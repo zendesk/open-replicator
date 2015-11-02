@@ -15,8 +15,8 @@ public class OpenParserTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenParserTest.class);
 
 	static int eventCount;
-	@Test
-	public void TestParserWithChecksums() throws Exception {
+
+	private void TestParserWithChecksums(long offset) throws Exception {
 		OnetimeServer fiveSixServer = new OnetimeServer("5.6");
 
 		fiveSixServer.boot();
@@ -27,7 +27,7 @@ public class OpenParserTest {
 
 		final OpenParser op = new OpenParser();
 
-		op.setStartPosition(4);
+		op.setStartPosition(offset);
 		op.setBinlogFileName("master.000001");
 		op.setBinlogFilePath(fiveSixServer.mysqlPath);
 
@@ -43,5 +43,15 @@ public class OpenParserTest {
 		Thread.sleep(1000);
 
 		assert(eventCount == 2);
+	}
+
+	@Test
+	public void TestParserWithChecksumsAtStart() throws Exception {
+		TestParserWithChecksums(4);
+	}
+
+	@Test
+	public void TestParserWithChecksumsAtOffset() throws Exception {
+		TestParserWithChecksums(120);
 	}
 }

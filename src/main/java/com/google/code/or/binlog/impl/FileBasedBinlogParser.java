@@ -56,7 +56,7 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 
 	@Override
 	protected void doStart() throws Exception {
-		this.is = open(this.binlogFilePath + "/" +  this.binlogFileName);
+		this.is = open(this.binlogFilePath + "/" +  this.binlogFileName, this.startPosition);
 	}
 
 	@Override
@@ -99,14 +99,16 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 		this.startPosition = startPosition;
 	}
 
+
 	/**
 	 *
 	 */
 	@Override
 	protected void doParse() throws Exception {
-		//
 		final Context context = new Context(this);
 		final EventInputStream es = new EventInputStream(is);
+
+		es.setChecksumEnabled(findChecksumEnabled());
 
 		while(isRunning() && is.available() > 0) {
 			final BinlogEventV4HeaderImpl header = es.getNextBinlogHeader();
@@ -130,9 +132,6 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 					parser.parse(es, header, context);
 				}
 
-				if ( header.getEventType() == MySQLConstants.FORMAT_DESCRIPTION_EVENT )
-					es.setChecksumEnabled(context.getChecksumEnabled());
-
 				es.finishEvent(header);
 			} catch(Exception e) {
 				IOUtils.closeQuietly(is);
@@ -143,10 +142,23 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 		}
 	}
 
+	private boolean findChecksumEnabled() throws Exception {
+		final XInputStream is = open(this.binlogFilePath + "/" +  this.binlogFileName, 4L);
+		final Context context = new Context(this);
+		final EventInputStream es = new EventInputStream(is);
+		final BinlogEventV4HeaderImpl header = es.getNextBinlogHeader();
+
+		BinlogEventParser parser = getEventParser(header.getEventType());
+		parser.parse(es, header, context);
+		es.finishEvent(header);
+		es.close();
+
+		return context.getChecksumEnabled();
+	}
 	/**
 	 *
 	 */
-	protected XInputStream open(String path) throws Exception {
+	protected XInputStream open(String path, Long offset) throws Exception {
 		//
 		final XInputStream is = new XInputStreamImpl(new RamdomAccessFileInputStream(new File(path)));
 		try {
@@ -157,8 +169,8 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 			}
 
 			//
-			if(this.startPosition > MySQLConstants.BINLOG_MAGIC.length) {
-				is.skip(this.startPosition - MySQLConstants.BINLOG_MAGIC.length);
+			if(offset > MySQLConstants.BINLOG_MAGIC.length) {
+				is.skip(offset - MySQLConstants.BINLOG_MAGIC.length);
 			}
 			return is;
 		} catch(Exception e) {
