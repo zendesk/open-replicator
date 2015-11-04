@@ -6,6 +6,11 @@ Open Replicator is a high performance MySQL binlog parser written in Java. It un
 
 ### releases
 
+1.3.4
+
+    release: 2015-11-03
+    bug-fix: support mysql 5.6 file-based replication when the offset is greater than 4
+
 1.3.3
 
     release: 2015-10-30
