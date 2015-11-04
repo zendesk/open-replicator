@@ -19,6 +19,7 @@ package com.google.code.or.binlog.impl;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import com.google.code.or.binlog.impl.parser.FormatDescriptionEventParser;
 import com.google.code.or.net.impl.EventInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,8 +149,13 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 		final EventInputStream es = new EventInputStream(is);
 		final BinlogEventV4HeaderImpl header = es.getNextBinlogHeader();
 
-		BinlogEventParser parser = getEventParser(header.getEventType());
-		parser.parse(es, header, context);
+		if ( header.getEventType() != MySQLConstants.FORMAT_DESCRIPTION_EVENT )
+			throw new RuntimeException("Expected FORMAT_DESCRIPTION_EVENT at top of file, found " + header);
+
+		// use our own parser instead of the client's -- they may not have registered a
+		// parser for FORMAT_DESCRIPTION_EVENT, or they may not want to get it
+		new FormatDescriptionEventParser().parse(es, header, context);
+
 		es.finishEvent(header);
 		es.close();
 
