@@ -1,2 +1,2 @@
 language: java
-script: mvn test
+install: mvn install -DskipTests=true -Dgpg.skip=true
