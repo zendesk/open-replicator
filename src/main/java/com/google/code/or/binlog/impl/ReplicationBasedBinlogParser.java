@@ -19,6 +19,7 @@ package com.google.code.or.binlog.impl;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import com.google.code.or.binlog.impl.parser.FormatDescriptionEventParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,16 +112,27 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 			readPacketMarker(is);
 			header = es.getNextBinlogHeader();
 
+			boolean isFormatDescriptionEvent = header.getEventType() == MySQLConstants.FORMAT_DESCRIPTION_EVENT;
+
 			// Parse the event body
 			if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
-				this.defaultParser.parse(is, header, context);
+				/*
+					FORMAT_DESCRIPTION events must always be parsed to ensure that we record
+					checksum info -- if the caller has filtered them out,
+					we still need to know.
+				 */
+				if ( isFormatDescriptionEvent )
+					new FormatDescriptionEventParser().parse(es, header, context);
+				else
+					this.defaultParser.parse(es, header, context);
 			} else {
 				BinlogEventParser parser = getEventParser(header.getEventType());
 				if(parser == null) parser = this.defaultParser;
 				parser.parse(es, header, context);
 			}
 
-			if ( header.getEventType() == MySQLConstants.FORMAT_DESCRIPTION_EVENT )
+
+			if ( isFormatDescriptionEvent )
 				es.setChecksumEnabled(context.getChecksumEnabled());
 
 			es.finishEvent(header);

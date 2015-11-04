@@ -67,8 +67,11 @@ public class OpenParserTest {
 	@Test
 	public void TestParserWithoutFormatDescriptionListener() throws Exception {
 		OpenParser op = getOpenParser(fiveSixServer, "master.000001", 120L);
-		FileBasedBinlogParser bp = (FileBasedBinlogParser) op.getBinlogParser();
+
+		FileBasedBinlogParser bp = op.getDefaultBinlogParser();
 		bp.unregisterEventParser(MySQLConstants.FORMAT_DESCRIPTION_EVENT);
+		op.setBinlogParser(bp);
+
 		TestParserWithChecksums(op);
 	}
 }
