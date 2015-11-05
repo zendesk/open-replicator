@@ -19,6 +19,7 @@ package com.google.code.or.binlog.impl;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import com.google.code.or.binlog.BinlogEventV4;
 import com.google.code.or.binlog.impl.parser.FormatDescriptionEventParser;
 import com.google.code.or.net.impl.EventInputStream;
 import org.slf4j.Logger;
@@ -145,7 +146,10 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 
 	private boolean findChecksumEnabled() throws Exception {
 		final XInputStream is = open(this.binlogFilePath + "/" +  this.binlogFileName, 4L);
-		final Context context = new Context(this);
+		final Context context = new Context(this) {
+			@Override
+			public void onEvents(BinlogEventV4 event) { }
+		};
 		final EventInputStream es = new EventInputStream(is);
 		final BinlogEventV4HeaderImpl header = es.getNextBinlogHeader();
 
