@@ -88,8 +88,9 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 		int unusedColumnCount = 0;
 		final byte[] types = tme.getColumnTypes();
 		final Metadata metadata = tme.getColumnMetadata();
-		final BitColumn nullColumns = is.readBit(types.length);
-		final List<Column> columns = new ArrayList<Column>(types.length);
+		final int nColumnsUsed = usedColumns.getSetBitCount();
+		final BitColumn nullColumns = is.readBit(nColumnsUsed);
+		final List<Column> columns = new ArrayList<Column>(nColumnsUsed);
 		for(int i = 0; i < types.length; ++i) {
 			//
 			int length = 0;

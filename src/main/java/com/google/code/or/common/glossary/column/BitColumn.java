@@ -60,6 +60,15 @@ public final class BitColumn implements Column {
 		return this.length;
 	}
 
+	public int getSetBitCount() {
+		int count = 0;
+		for ( int i = 0 ; i < this.length ; i++ ) {
+			if ( get(i) )
+				count++;
+		}
+		return count;
+	}
+
 	public byte[] getValue() {
 		return this.value;
 	}
