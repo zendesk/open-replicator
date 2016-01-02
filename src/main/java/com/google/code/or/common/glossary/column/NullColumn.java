@@ -27,7 +27,7 @@ public final class NullColumn implements Column {
 	private static final long serialVersionUID = 3300119160243172731L;
 
 	//
-	private static final NullColumn[] CACHE = new NullColumn[255];
+	private static final NullColumn[] CACHE = new NullColumn[256];
 	static {
 		for(int i = 0; i < CACHE.length; i++) {
 			CACHE[i] = new NullColumn(i);

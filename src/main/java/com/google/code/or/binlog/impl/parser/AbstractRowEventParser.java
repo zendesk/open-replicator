@@ -26,31 +26,16 @@ import com.google.code.or.binlog.impl.filter.BinlogRowEventFilterImpl;
 import com.google.code.or.common.glossary.Column;
 import com.google.code.or.common.glossary.Metadata;
 import com.google.code.or.common.glossary.Row;
-import com.google.code.or.common.glossary.column.BitColumn;
-import com.google.code.or.common.glossary.column.BlobColumn;
-import com.google.code.or.common.glossary.column.DateColumn;
-import com.google.code.or.common.glossary.column.Datetime2Column;
-import com.google.code.or.common.glossary.column.DatetimeColumn;
-import com.google.code.or.common.glossary.column.DecimalColumn;
-import com.google.code.or.common.glossary.column.DoubleColumn;
-import com.google.code.or.common.glossary.column.EnumColumn;
-import com.google.code.or.common.glossary.column.FloatColumn;
-import com.google.code.or.common.glossary.column.Int24Column;
-import com.google.code.or.common.glossary.column.LongColumn;
-import com.google.code.or.common.glossary.column.LongLongColumn;
-import com.google.code.or.common.glossary.column.NullColumn;
-import com.google.code.or.common.glossary.column.SetColumn;
-import com.google.code.or.common.glossary.column.ShortColumn;
-import com.google.code.or.common.glossary.column.Time2Column;
-import com.google.code.or.common.glossary.column.TimeColumn;
-import com.google.code.or.common.glossary.column.Timestamp2Column;
-import com.google.code.or.common.glossary.column.TimestampColumn;
-import com.google.code.or.common.glossary.column.TinyColumn;
-import com.google.code.or.common.glossary.column.YearColumn;
+import com.google.code.or.common.glossary.column.*;
 import com.google.code.or.common.util.CodecUtils;
 import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.MySQLUtils;
 import com.google.code.or.io.XInputStream;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKBReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -59,6 +44,7 @@ import com.google.code.or.io.XInputStream;
 public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 	//
 	protected BinlogRowEventFilter rowEventFilter;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRowEventParser.class);
 
 	/**
 	 *
@@ -148,6 +134,19 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 			case MySQLConstants.TYPE_BLOB:
 				final int blobLength = is.readInt(meta);
 				columns.add(BlobColumn.valueOf(is.readBytes(blobLength)));
+				break;
+			case MySQLConstants.TYPE_GEOMETRY:
+				final int geomLength = is.readInt(meta);
+				final int _unknown = is.readInt(4);
+				final WKBReader reader = new WKBReader();
+
+				try {
+					final Geometry g = reader.read(is.readBytes(geomLength - 4));
+					columns.add(GeometryColumn.valueOf(g));
+				} catch ( ParseException e ) {
+					throw new RuntimeException("Could not parse geometry: ", e);
+				}
+
 				break;
 			case MySQLConstants.TYPE_NEWDECIMAL:
 				final int precision = meta & 0xFF;
