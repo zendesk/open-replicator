@@ -144,7 +144,7 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 					final Geometry g = reader.read(is.readBytes(geomLength - 4));
 					columns.add(GeometryColumn.valueOf(g));
 				} catch ( ParseException e ) {
-					throw new RuntimeException("Could not parse geometry: ", e);
+					throw new RuntimeException("Could not parse geometry, unknown column was " + _unknown, e);
 				}
 
 				break;
