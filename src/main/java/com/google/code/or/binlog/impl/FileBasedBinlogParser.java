@@ -115,7 +115,6 @@ public class FileBasedBinlogParser extends AbstractBinlogParser {
 		while(isRunning() && is.available() > 0) {
 			final BinlogEventV4HeaderImpl header = es.getNextBinlogHeader();
 			try {
-
 				if(isVerbose() && LOGGER.isInfoEnabled()) {
 					LOGGER.info("read an event, header: {}", header);
 				}

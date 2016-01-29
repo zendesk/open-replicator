@@ -43,6 +43,7 @@ import com.google.code.or.binlog.impl.parser.UserVarEventParser;
 import com.google.code.or.binlog.impl.parser.WriteRowsEventParser;
 import com.google.code.or.binlog.impl.parser.WriteRowsEventV2Parser;
 import com.google.code.or.binlog.impl.parser.XidEventParser;
+import com.google.code.or.binlog.impl.parser.GtidEventParser;
 import com.google.code.or.common.glossary.column.StringColumn;
 import com.google.code.or.io.impl.SocketFactoryImpl;
 import com.google.code.or.net.Packet;
@@ -57,6 +58,7 @@ import com.google.code.or.net.impl.packet.command.ComBinlogDumpPacket;
 /**
  *
  * @author Jingqi Xu
+ * @author darnaut
  */
 public class OpenReplicator {
 	//
@@ -330,7 +332,8 @@ public class OpenReplicator {
 		r.registerEventParser(new UpdateRowsEventV2Parser());
 		r.registerEventParser(new DeleteRowsEventV2Parser());
 		r.registerEventParser(new FormatDescriptionEventParser());
-
+		r.registerEventParser(new GtidEventParser());
+		
 		//
 		r.setTransport(this.transport);
 		return r;
