@@ -27,9 +27,7 @@ import com.google.code.or.io.XInputStream;
 /**
  * GTID Event
  *
- * <p>
  *     Event format:
- *     <pre>
  *         +-------------------+
  *         | 1B commit flag    |
  *         +-------------------+
@@ -39,21 +37,19 @@ import com.google.code.or.io.XInputStream;
  *         +-------------------+
  *         | ...               |
  *         +-------------------+
- *     </pre>
- * </p>
  * @author brandtg
  */
 public class GtidEventParser extends AbstractBinlogEventParser {
 
 	/**
-	 * 
+	 *
 	 */
 	public GtidEventParser() {
 		super(MySQLConstants.GTID_LOG_EVENT);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void parse(XInputStream is, BinlogEventV4Header header, BinlogParserContext context) throws IOException {
 		GtidEvent event = new GtidEvent(header);
