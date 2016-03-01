@@ -87,4 +87,15 @@ public class OpenReplicatorTest {
 
 		TestReplicator(or);
 	}
+
+	@Test
+	public void TestHeartbeatReplicator() throws Exception {
+		OpenReplicator or = getOpenReplicator(fiveSixServer, "master.000001", 4L);
+		or.setHeartbeatPeriod(0.1f);
+		TestReplicator(or);
+
+		assert(or.getHeartbeatCount() > 5);  // depends on timing, really
+		assert(or.millisSinceLastEvent() != null);
+		assert(or.millisSinceLastEvent() <= 150);
+	}
 }

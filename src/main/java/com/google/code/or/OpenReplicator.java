@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +76,7 @@ public class OpenReplicator {
 	protected int level1BufferSize = 1024 * 1024;
 	protected int level2BufferSize = 8 * 1024 * 1024;
 	protected int socketReceiveBufferSize = 512 * 1024;
+	protected Float heartbeatPeriod = null;
 
 	//
 	protected Transport transport;
@@ -103,6 +107,7 @@ public class OpenReplicator {
 			this.binlogParser = getDefaultBinlogParser();
 
 		setupChecksumState();
+		setupHeartbeatPeriod();
 		dumpBinlog();
 
 		this.binlogParser.setBinlogFileName(this.binlogFileName);
@@ -270,6 +275,33 @@ public class OpenReplicator {
 				throw e;
 		}
 	}
+
+	protected void setupHeartbeatPeriod() throws Exception {
+		if ( this.heartbeatPeriod == null )
+			return;
+
+		BigInteger nanoSeconds = BigDecimal.valueOf(1000000000).multiply(BigDecimal.valueOf(this.heartbeatPeriod)).toBigInteger();
+
+		final Query query = new Query(this.transport);
+		query.getFirst("SET @master_heartbeat_period = " + nanoSeconds);
+	}
+
+	public void setHeartbeatPeriod(float period) {
+		this.heartbeatPeriod = period;
+	}
+
+	public Float getHeartbeatPeriod() {
+		return this.heartbeatPeriod;
+	}
+
+	public long getHeartbeatCount() {
+		return binlogParser.getHeartbeatCount();
+	}
+
+	public Long millisSinceLastEvent() {
+		return binlogParser.millisSinceLastEvent();
+	}
+
 	/**
 	 *
 	 */
@@ -333,7 +365,7 @@ public class OpenReplicator {
 		r.registerEventParser(new DeleteRowsEventV2Parser());
 		r.registerEventParser(new FormatDescriptionEventParser());
 		r.registerEventParser(new GtidEventParser());
-		
+
 		//
 		r.setTransport(this.transport);
 		return r;

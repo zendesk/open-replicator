@@ -41,6 +41,8 @@ import com.google.code.or.net.impl.packet.OKPacket;
 public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReplicationBasedBinlogParser.class);
+	protected long heartbeatCount = 0;
+	protected Long lastEventMillis = null;
 
 	//
 	protected Transport transport;
@@ -97,6 +99,17 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 		}
 	}
 
+	public long getHeartbeatCount() {
+		return this.heartbeatCount;
+	}
+
+	public Long millisSinceLastEvent() {
+		if ( this.lastEventMillis == null )
+			return null;
+
+		return System.currentTimeMillis() - this.lastEventMillis;
+	}
+
 	/**
 	 *
 	 */
@@ -113,6 +126,11 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 			header = es.getNextBinlogHeader();
 
 			boolean isFormatDescriptionEvent = header.getEventType() == MySQLConstants.FORMAT_DESCRIPTION_EVENT;
+
+			if ( header.getEventType() == MySQLConstants.HEARTBEAT_LOG_EVENT )
+				this.heartbeatCount++;
+
+			this.lastEventMillis = System.currentTimeMillis();
 
 			// Parse the event body
 			if(this.eventFilter != null && !this.eventFilter.accepts(header, context)) {
