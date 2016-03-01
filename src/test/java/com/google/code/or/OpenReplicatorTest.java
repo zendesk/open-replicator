@@ -95,7 +95,7 @@ public class OpenReplicatorTest {
 		TestReplicator(or);
 
 		assert(or.getHeartbeatCount() > 5);  // depends on timing, really
-		assert(or.millisSinceLastHeartbeat() != null);
-		assert(or.millisSinceLastHeartbeat() > 0);
+		assert(or.millisSinceLastEvent() != null);
+		assert(or.millisSinceLastEvent() <= 150);
 	}
 }

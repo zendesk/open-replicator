@@ -298,8 +298,8 @@ public class OpenReplicator {
 		return binlogParser.getHeartbeatCount();
 	}
 
-	public Long millisSinceLastHeartbeat() {
-		return binlogParser.millisSinceLastHeartbeat();
+	public Long millisSinceLastEvent() {
+		return binlogParser.millisSinceLastEvent();
 	}
 
 	/**
