@@ -17,6 +17,7 @@
 package com.google.code.or;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -77,6 +78,7 @@ public class OpenReplicator {
 	protected int level2BufferSize = 8 * 1024 * 1024;
 	protected int socketReceiveBufferSize = 512 * 1024;
 	protected Float heartbeatPeriod = null;
+	protected String uuid = UUID.randomUUID().toString();
 
 	//
 	protected Transport transport;
@@ -108,6 +110,7 @@ public class OpenReplicator {
 
 		setupChecksumState();
 		setupHeartbeatPeriod();
+		setupSlaveUUID();
 		dumpBinlog();
 
 		this.binlogParser.setBinlogFileName(this.binlogFileName);
@@ -284,6 +287,11 @@ public class OpenReplicator {
 
 		final Query query = new Query(this.transport);
 		query.getFirst("SET @master_heartbeat_period = " + nanoSeconds);
+	}
+
+	protected void setupSlaveUUID() throws Exception {
+		final Query query = new Query(this.transport);
+		query.getFirst("SET @slave_uuid = '" + this.uuid + "'");
 	}
 
 	public void setHeartbeatPeriod(float period) {
