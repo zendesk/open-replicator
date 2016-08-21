@@ -79,6 +79,7 @@ public class OpenReplicator {
 	protected int socketReceiveBufferSize = 512 * 1024;
 	protected Float heartbeatPeriod = null;
 	protected String uuid = UUID.randomUUID().toString();
+	protected boolean stopOnEOF = false;
 
 	//
 	protected Transport transport;
@@ -136,6 +137,8 @@ public class OpenReplicator {
 		this.transport.disconnect();
 
 		this.binlogParser.stop(timeout, unit);
+
+		this.onStop();
 	}
 
 	public void stopQuietly(long timeout, TimeUnit unit) {
@@ -310,6 +313,16 @@ public class OpenReplicator {
 		return binlogParser.millisSinceLastEvent();
 	}
 
+	public boolean isStopOnEOF() {
+		return stopOnEOF;
+	}
+
+	public void setStopOnEOF(boolean stopOnEOF) {
+		this.stopOnEOF = stopOnEOF;
+	}
+
+	public void onStop() { }
+
 	/**
 	 *
 	 */
@@ -317,7 +330,7 @@ public class OpenReplicator {
 		//
 		final ComBinlogDumpPacket command = new ComBinlogDumpPacket();
 		command.setBinlogFlag(0);
-		command.setServerId(this.serverId);
+		command.setServerId(stopOnEOF ? 0 : this.serverId);
 		command.setBinlogPosition(this.binlogPosition);
 		command.setBinlogFileName(StringColumn.valueOf(this.binlogFileName.getBytes(this.encoding)));
 		this.transport.getOutputStream().writePacket(command);
@@ -355,7 +368,7 @@ public class OpenReplicator {
 
 	protected ReplicationBasedBinlogParser getDefaultBinlogParser() throws Exception {
 		//
-		final ReplicationBasedBinlogParser r = new ReplicationBasedBinlogParser();
+		final ReplicationBasedBinlogParser r = new ReplicationBasedBinlogParser(this.stopOnEOF);
 		r.registerEventParser(new StopEventParser());
 		r.registerEventParser(new RotateEventParser());
 		r.registerEventParser(new IntvarEventParser());
