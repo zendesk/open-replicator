@@ -327,7 +327,7 @@ public class OpenReplicator {
 	 *
 	 */
 	protected void dumpBinlog() throws Exception {
-		//
+		LOGGER.info(String.format("starting replication at %s:%d", this.binlogFileName, this.binlogPosition));
 		final ComBinlogDumpPacket command = new ComBinlogDumpPacket();
 		command.setBinlogFlag(0);
 		command.setServerId(stopOnEOF ? 0 : this.serverId);
