@@ -60,7 +60,7 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 	public void login(Transport transport) throws IOException {
 		//
 		final TransportContext ctx = transport.getContext();
-		LOGGER.info("start to login, user: {}, host: {}, port: {}", new Object[]{this.user, ctx.getServerHost(), ctx.getServerPort()});
+		LOGGER.debug("start to login, user: {}, host: {}, port: {}", new Object[]{this.user, ctx.getServerHost(), ctx.getServerPort()});
 
 		//
 		final XSerializer s = new XSerializer(64);
@@ -85,16 +85,16 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 		final Packet response = transport.getInputStream().readPacket();
 		if(response.getPacketBody()[0] == ErrorPacket.PACKET_MARKER) {
 			final ErrorPacket error = ErrorPacket.valueOf(response);
-			LOGGER.info("login failed, user: {}, error: {}", this.user, error);
+			LOGGER.error("login failed, user: {}, error: {}", this.user, error);
 			throw new TransportException(error);
 		} else if(response.getPacketBody()[0] == EOFPacket.PACKET_MARKER) {
-			LOGGER.info("Old style password authentication is not supported, upgrade user {} to a new style password or specify a different user", this.user);
+			LOGGER.error("Old style password authentication is not supported, upgrade user {} to a new style password or specify a different user", this.user);
 			throw new RuntimeException("Old style password authentication not supported");
 		} else if(response.getPacketBody()[0] == OKPacket.PACKET_MARKER) {
 			final OKPacket ok = OKPacket.valueOf(response);
-			LOGGER.info("login successfully, user: {}, detail: {}", this.user, ok);
+			LOGGER.debug("login successfully, user: {}, detail: {}", this.user, ok);
 		} else {
-			LOGGER.warn("login failed, unknown packet: ", response);
+			LOGGER.error("login failed, unknown packet: ", response);
 			throw new RuntimeException("assertion failed, invalid packet: " + response);
 		}
 	}
