@@ -165,18 +165,21 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 				break;
 			case MySQLConstants.TYPE_TIME2:
 				final int value1 = is.readInt(3, false);
-				final int nanos1 = is.readInt((meta + 1) / 2, false);
-				columns.add(Time2Column.valueOf(MySQLUtils.toTime2(value1, nanos1)));
+				final int metaLength1 = (meta + 1) / 2;
+				final int nanos1 = is.readInt(metaLength1, false);
+				columns.add(Time2Column.valueOf(MySQLUtils.toTime2(value1, nanos1, metaLength1)));
 				break;
 			case MySQLConstants.TYPE_DATETIME2:
 				final long value2 = is.readLong(5, false);
-				final int nanos2 = is.readInt((meta + 1) / 2, false);
-				columns.add(Datetime2Column.valueOf(MySQLUtils.toDatetime2(value2, nanos2)));
+				final int metaLength2 = (meta + 1) / 2;
+				final int nanos2 = is.readInt(metaLength2, false);
+				columns.add(Datetime2Column.valueOf(MySQLUtils.toDatetime2(value2, nanos2, metaLength2)));
 				break;
 			case MySQLConstants.TYPE_TIMESTAMP2:
 				final long value3 = is.readLong(4, false);
-				final int nanos3 = is.readInt((meta + 1) / 2, false);
-				columns.add(Timestamp2Column.valueOf(MySQLUtils.toTimestamp2(value3, nanos3)));
+				final int metaLength3 = (meta + 1) / 2;
+				final int nanos3 = is.readInt(metaLength3, false);
+				columns.add(Timestamp2Column.valueOf(MySQLUtils.toTimestamp2(value3, nanos3, metaLength3)));
 				break;
 			default:
 				throw new RuntimeException("assertion failed, unknown column type: " + type);

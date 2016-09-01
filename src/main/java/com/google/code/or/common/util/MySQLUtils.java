@@ -68,7 +68,7 @@ public final class MySQLUtils {
         return new java.sql.Time(c.getTimeInMillis());
 	}
 
-	public static java.sql.Time toTime2(int value, int nanos) {
+	public static java.sql.Time toTime2(int value, int fraction, int width) {
 		final int h = (value >> 12) & 0x3FF;
 		final int m = (value >> 6) & 0x3F;
 		final int s = (value >> 0) & 0x3F;
@@ -76,7 +76,30 @@ public final class MySQLUtils {
         c.set(1970, 0, 1, h, m, s);
         c.set(Calendar.MILLISECOND, 0);
         final long millis = c.getTimeInMillis();
-        return new java.sql.Time(millis + (nanos / 1000000));
+        return new java.sql.Time(millis + (nanosForFractionalValue(fraction, width) / 1000000));
+	}
+
+	// fractional values are 0 - 3 bytes wide.
+	// 1 byte, we get 0-99 resolution
+	// 2 bytes, we get 0-9,999
+	// 3 bytes, we get 0-999,999 resolution
+
+	// 1 byte: the value "99" means 990,000,000 nanos == fraction * 10^7
+	// 2 bytes: the value "9,999" means 999,900,000 nanos == fraction * 10^5
+	// 3 bytes: the value "999,999" means "999,999,000" nanos == fraction * 10^3
+	public static int nanosForFractionalValue(int value, int width) {
+		switch (width) {
+			case 0:
+				return 0;
+			case 1:
+				return value * 10000000;
+			case 2:
+				return value * 100000;
+			case 3:
+				return value * 1000;
+			default:
+				throw new RuntimeException("unexpected number of fractional bytes");
+		}
 	}
 
 	public static java.util.Date toDatetime(long value) {
@@ -92,7 +115,7 @@ public final class MySQLUtils {
         return c.getTime();
 	}
 
-	public static java.util.Date toDatetime2(long value, int nanos) {
+	public static java.util.Date toDatetime2(long value, int fraction, int width) {
 		final long x = (value >> 22) & 0x1FFFFL;
 		final int year = (int)(x / 13);
 		final int month = (int)(x % 13);
@@ -104,16 +127,16 @@ public final class MySQLUtils {
         c.set(year, month - 1, day, hour, minute, second);
         c.set(Calendar.MILLISECOND, 0);
         final long millis = c.getTimeInMillis();
-        return new java.util.Date(millis + (nanos / 1000000));
+        return new java.util.Date(millis + (nanosForFractionalValue(fraction, width) / 1000000));
 	}
 
 	public static java.sql.Timestamp toTimestamp(long seconds) {
 		return new java.sql.Timestamp(seconds * 1000L);
 	}
 
-	public static Timestamp toTimestamp2(long seconds, int nanos) {
+	public static Timestamp toTimestamp2(long seconds, int fraction, int width) {
 		final java.sql.Timestamp r = new java.sql.Timestamp(seconds * 1000L);
-		r.setNanos(nanos);
+		r.setNanos(nanosForFractionalValue(fraction, width));
 		return r;
 	}
 
