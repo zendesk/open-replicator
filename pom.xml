@@ -4,7 +4,7 @@
 
   <groupId>com.zendesk</groupId>
   <artifactId>open-replicator</artifactId>
-  <version>1.4.3</version>
+  <version>1.4.4</version>
   <packaging>jar</packaging>
 
   <name>open-replicator</name>
@@ -91,7 +91,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
