@@ -144,7 +144,7 @@ public class OpenReplicatorTest {
 			)
 		);
 		String insertSQL = String.format("insert into foo.%s values(?, ?, ?, ?, ?, ?)", table);
-		PreparedStatement s	= fiveSixServer.getConnection().prepareStatement(insertSQL);
+		PreparedStatement s = fiveSixServer.getConnection().prepareStatement(insertSQL);
 
 		for ( int i = 0; i < 6; i++ ) {
 			s.setString(i + 1, times[i]);
