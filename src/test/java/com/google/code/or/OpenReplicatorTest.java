@@ -64,7 +64,7 @@ public class OpenReplicatorTest {
 		return or;
 	}
 
-	private void TestReplicator(OpenReplicator or) throws Exception {
+	private int TestReplicator(OpenReplicator or) throws Exception {
 		eventCount = 0;
 		or.setBinlogEventListener(new BinlogEventListener() {
 			public void onEvents(BinlogEventV4 event) {
@@ -74,9 +74,8 @@ public class OpenReplicatorTest {
 			}
 		});
 		or.start();
-		Thread.sleep(1000);
-
-		assert(eventCount == 2);
+		Thread.sleep(2000);
+		return eventCount;
 	}
 
 	private WriteRowsEventV2 getFirstInsert(OpenReplicator or) throws Exception {
@@ -96,7 +95,8 @@ public class OpenReplicatorTest {
 	@Test
 	public void TestNormalReplicator() throws Exception {
 		createData();
-		TestReplicator(getOpenReplicator(fiveSixServer, "master.000001", 4L));
+		int count = TestReplicator(getOpenReplicator(fiveSixServer, "master.000001", 4L));
+		assert(count == 2);
 	}
 
 	@Test
@@ -119,7 +119,8 @@ public class OpenReplicatorTest {
 
 		or.setBinlogParser(bp);
 
-		TestReplicator(or);
+		int count = TestReplicator(or);
+		assert(count == 2);
 	}
 
 	@Test
@@ -132,6 +133,19 @@ public class OpenReplicatorTest {
 		assert(or.getHeartbeatCount() > 5);  // depends on timing, really
 		assert(or.millisSinceLastEvent() != null);
 		assert(or.millisSinceLastEvent() <= 150);
+		assert or.isRunning();
+	}
+
+	@Test
+	public void testStopOnEof() throws Exception {
+		createData();
+		fiveSixServer.execute("FLUSH LOGS");
+		fiveSixServer.execute("insert into foo.bar set id = 3");
+
+		OpenReplicator or = getOpenReplicator(fiveSixServer, "master.000001", 4L);
+		or.setStopOnEOF(true);
+		TestReplicator(or);
+		assert !or.isRunning();
 	}
 
 	private void testPrecision(String type, String table, String... times) throws Exception {
@@ -144,7 +158,7 @@ public class OpenReplicatorTest {
 			)
 		);
 		String insertSQL = String.format("insert into foo.%s values(?, ?, ?, ?, ?, ?)", table);
-		PreparedStatement s = fiveSixServer.getConnection().prepareStatement(insertSQL);
+		PreparedStatement s	= fiveSixServer.getConnection().prepareStatement(insertSQL);
 
 		for ( int i = 0; i < 6; i++ ) {
 			s.setString(i + 1, times[i]);

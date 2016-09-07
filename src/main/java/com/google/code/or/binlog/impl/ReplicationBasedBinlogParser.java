@@ -16,6 +16,7 @@
  */
 package com.google.code.or.binlog.impl;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -41,17 +42,22 @@ import com.google.code.or.net.impl.packet.OKPacket;
 public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 	//
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReplicationBasedBinlogParser.class);
+	private final boolean stopOnEOF;
 	protected long heartbeatCount = 0;
 	protected Long lastEventMillis = null;
 
 	//
 	protected Transport transport;
 
+	public ReplicationBasedBinlogParser(boolean stopOnEOF) {
+		this.stopOnEOF = stopOnEOF;
+	}
 
 	/**
 	 *
 	 */
 	public ReplicationBasedBinlogParser() {
+		this(false);
 	}
 
 	@Override
@@ -91,8 +97,12 @@ public class ReplicationBasedBinlogParser extends AbstractBinlogParser {
 				final ErrorPacket packet = ErrorPacket.valueOf(ts.currentPacketLength(), ts.currentPacketSequence(), packetMarker, ts);
 				throw new RuntimeException(packet.toString());
 			} else if((byte)packetMarker == EOFPacket.PACKET_MARKER) {
-				final EOFPacket packet = EOFPacket.valueOf(ts.currentPacketLength(), ts.currentPacketSequence(), packetMarker, ts);
-				throw new RuntimeException(packet.toString());
+				if ( stopOnEOF ) {
+					throw new EOFException();
+				} else {
+					final EOFPacket packet = EOFPacket.valueOf(ts.currentPacketLength(), ts.currentPacketSequence(), packetMarker, ts);
+					throw new RuntimeException(packet.toString());
+				}
 			} else {
 				throw new RuntimeException("assertion failed, invalid packet marker: " + packetMarker);
 			}

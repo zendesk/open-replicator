@@ -35,8 +35,15 @@ public class OnetimeServer {
 	public void boot() throws IOException, InterruptedException {
 		final String dir = System.getProperty("user.dir");
 
-		ProcessBuilder pb = new ProcessBuilder(dir + "/src/test/onetimeserver", "--mysql-version=" + mysqlVersion,
-				"--log-bin=master", "--binlog_format=row", "--innodb_flush_log_at_trx_commit=1", "--server_id=" + SERVER_ID);
+		ProcessBuilder pb = new ProcessBuilder(
+			dir + "/src/test/onetimeserver",
+			"--mysql-version=" + mysqlVersion,
+			"--log-bin=master",
+			"--binlog_format=row",
+			"--innodb_flush_log_at_trx_commit=1",
+			"--server_id=" + SERVER_ID,
+			"--sync_binlog=1"
+		);
 		Process p = pb.start();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 

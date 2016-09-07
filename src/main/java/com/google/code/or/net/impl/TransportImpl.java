@@ -64,7 +64,7 @@ public class TransportImpl extends AbstractTransport {
 
 		//
 		if(isVerbose() && LOGGER.isInfoEnabled()) {
-			LOGGER.info("connecting to host: {}, port: {}", host, port);
+			LOGGER.debug("connecting to host: {}, port: {}", host, port);
 		}
 
 		//
@@ -80,7 +80,7 @@ public class TransportImpl extends AbstractTransport {
 		final Packet packet = this.is.readPacket();
 		if(packet.getPacketBody()[0] == ErrorPacket.PACKET_MARKER) {
 			final ErrorPacket error = ErrorPacket.valueOf(packet);
-			LOGGER.info("failed to connect to host: {}, port: {}, error", new Object[]{host, port, error});
+			LOGGER.warn("failed to connect to host: {}, port: {}, error", new Object[]{host, port, error});
 			throw new TransportException(error);
 		} else {
 			//
@@ -97,7 +97,7 @@ public class TransportImpl extends AbstractTransport {
 
 			//
 			if(isVerbose() && LOGGER.isInfoEnabled()) {
-				LOGGER.info("connected to host: {}, port: {}, context: {}", new Object[]{host, port, this.context});
+				LOGGER.debug("connected to host: {}, port: {}, context: {}", new Object[]{host, port, this.context});
 			}
 		}
 
@@ -118,7 +118,7 @@ public class TransportImpl extends AbstractTransport {
 
 		//
 		if(isVerbose() && LOGGER.isInfoEnabled()) {
-			LOGGER.info("disconnected from {}:{}", this.context.getServerHost(), this.context.getServerPort());
+			LOGGER.debug("disconnected from {}:{}", this.context.getServerHost(), this.context.getServerPort());
 		}
 	}
 
