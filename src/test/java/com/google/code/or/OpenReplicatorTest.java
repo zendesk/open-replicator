@@ -45,7 +45,6 @@ public class OpenReplicatorTest {
 	private void createData() throws Exception {
 		fiveSixServer.execute("RESET MASTER");
 		fiveSixServer.execute("TRUNCATE TABLE foo.bar");
-
 		fiveSixServer.execute("insert into foo.bar set id = 1");
 		fiveSixServer.execute("insert into foo.bar set id = 2");
 	}
