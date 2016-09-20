@@ -72,8 +72,8 @@ public class AuthenticatorImpl implements Transport.Authenticator {
 		if (this.password == null) {
 			s.writeBytes((byte) 0, 1);
 		} else {
-			s.writeBytes(MySQLUtils.password41OrLater(this.password.getBytes(this.encoding), ctx.getScramble().getBytes(this.encoding)));
 			s.writeInt(20, 1); // the length of the SHA1 encrypted password
+			s.writeBytes(MySQLUtils.password41OrLater(this.password.getBytes(this.encoding), ctx.getScramble().getBytes(this.encoding)));
 		}
 		if(this.initialSchema != null) s.writeNullTerminatedString(StringColumn.valueOf(this.initialSchema.getBytes(this.encoding)));
 
