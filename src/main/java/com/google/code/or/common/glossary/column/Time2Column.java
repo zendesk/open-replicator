@@ -17,12 +17,13 @@
 package com.google.code.or.common.glossary.column;
 
 import com.google.code.or.common.glossary.Column;
+import com.google.code.or.common.glossary.column.AbstractDatetimeColumn;
 
 /**
  *
  * @author Jingqi Xu
  */
-public final class Time2Column implements Column {
+public final class Time2Column extends AbstractDatetimeColumn {
 	//
 	private static final long serialVersionUID = 2408833111678694298L;
 
@@ -34,6 +35,12 @@ public final class Time2Column implements Column {
 	 */
 	private Time2Column(java.sql.Time value) {
 		this.value = value;
+		this.timestampValue = new java.sql.Timestamp(value.getTime());
+	}
+
+	private Time2Column(java.sql.Timestamp value) {
+		this.timestampValue = value;
+		this.value = new java.sql.Time(value.getTime());
 	}
 
 	/**
@@ -55,6 +62,10 @@ public final class Time2Column implements Column {
 	 *
 	 */
 	public static final Time2Column valueOf(java.sql.Time value) {
+		return new Time2Column(value);
+	}
+
+	public static final Time2Column valueOf(java.sql.Timestamp value) {
 		return new Time2Column(value);
 	}
 }
