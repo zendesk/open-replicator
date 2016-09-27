@@ -150,9 +150,9 @@ public abstract class AbstractRowEventParser extends AbstractBinlogEventParser {
 				break;
 			case MySQLConstants.TYPE_NEWDECIMAL:
 				final int precision = meta & 0xFF;
-		        final int scale = meta >> 8;
-		        final int decimalLength = MySQLUtils.getDecimalBinarySize(precision, scale);
-		        columns.add(DecimalColumn.valueOf(MySQLUtils.toDecimal(precision, scale, is.readBytes(decimalLength)), precision, scale));
+				final int scale = meta >> 8;
+				final int decimalLength = MySQLUtils.getDecimalBinarySize(precision, scale);
+				columns.add(DecimalColumn.valueOf(MySQLUtils.toDecimal(precision, scale, is.readBytes(decimalLength)), precision, scale));
 				break;
 			case MySQLConstants.TYPE_STRING:
 				final int stringLength = length < 256 ? is.readInt(1) : is.readInt(2);

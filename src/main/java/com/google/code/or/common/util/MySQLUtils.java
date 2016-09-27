@@ -63,9 +63,9 @@ public final class MySQLUtils {
 		final int m = (int)(value % 100);
 		final int h = (int)(value / 100);
 		final Calendar c = Calendar.getInstance();
-        c.set(1970, 0, 1, h, m, s);
-        c.set(Calendar.MILLISECOND, 0);
-        return new java.sql.Time(c.getTimeInMillis());
+		c.set(1970, 0, 1, h, m, s);
+		c.set(Calendar.MILLISECOND, 0);
+		return new java.sql.Time(c.getTimeInMillis());
 	}
 
 	public static java.sql.Time toTime2(int value, int fraction, int width) {
@@ -121,9 +121,9 @@ public final class MySQLUtils {
 		final int month = (int)(value % 100);
 		final int year = (int)(value / 100);
 		final Calendar c = Calendar.getInstance();
-        c.set(year, month - 1, day, hour, minute, second);
-        c.set(Calendar.MILLISECOND, 0);
-        return c.getTime();
+		c.set(year, month - 1, day, hour, minute, second);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
 	}
 
 	public static java.util.Date toDatetime2(long value, int fraction, int width) {
@@ -170,40 +170,40 @@ public final class MySQLUtils {
 
 	public static BigDecimal toDecimal(int precision, int scale, byte[] value) {
 		//
-        final boolean positive = (value[0] & 0x80) == 0x80;
-        value[0] ^= 0x80;
-        if (!positive) {
-        	 for (int i = 0; i < value.length; i++) {
-        		 value[i] ^= 0xFF;
-             }
-        }
+		final boolean positive = (value[0] & 0x80) == 0x80;
+		value[0] ^= 0x80;
+		if (!positive) {
+			for (int i = 0; i < value.length; i++) {
+				value[i] ^= 0xFF;
+			}
+		}
 
-        //
-        final int x = precision - scale;
-        final int ipDigits = x / DIGITS_PER_4BYTES;
-        final int ipDigitsX = x - ipDigits * DIGITS_PER_4BYTES;
-        final int ipSize = (ipDigits << 2) + DECIMAL_BINARY_SIZE[ipDigitsX];
-        int offset = DECIMAL_BINARY_SIZE[ipDigitsX];
-        BigDecimal ip = offset > 0 ? BigDecimal.valueOf(CodecUtils.toInt(value, 0, offset)) : BigDecimal.ZERO;
-        for(; offset < ipSize; offset += 4) {
-        	final int i = CodecUtils.toInt(value, offset, 4);
-        	ip = ip.movePointRight(DIGITS_PER_4BYTES).add(BigDecimal.valueOf(i));
-        }
+		//
+		final int x = precision - scale;
+		final int ipDigits = x / DIGITS_PER_4BYTES;
+		final int ipDigitsX = x - ipDigits * DIGITS_PER_4BYTES;
+		final int ipSize = (ipDigits << 2) + DECIMAL_BINARY_SIZE[ipDigitsX];
+		int offset = DECIMAL_BINARY_SIZE[ipDigitsX];
+		BigDecimal ip = offset > 0 ? BigDecimal.valueOf(CodecUtils.toInt(value, 0, offset)) : BigDecimal.ZERO;
+		for(; offset < ipSize; offset += 4) {
+			final int i = CodecUtils.toInt(value, offset, 4);
+			ip = ip.movePointRight(DIGITS_PER_4BYTES).add(BigDecimal.valueOf(i));
+		}
 
-        //
-        int shift = 0;
-        BigDecimal fp = BigDecimal.ZERO;
-        for (; shift + DIGITS_PER_4BYTES <= scale; shift += DIGITS_PER_4BYTES, offset += 4) {
-            final int i = CodecUtils.toInt(value, offset, 4);
-            fp = fp.add(BigDecimal.valueOf(i).movePointLeft(shift + DIGITS_PER_4BYTES));
-        }
-        if(shift < scale) {
-        	final int i = CodecUtils.toInt(value, offset, DECIMAL_BINARY_SIZE[scale - shift]);
-            fp = fp.add(BigDecimal.valueOf(i).movePointLeft(scale));
-        }
+		//
+		int shift = 0;
+		BigDecimal fp = BigDecimal.ZERO;
+		for (; shift + DIGITS_PER_4BYTES <= scale; shift += DIGITS_PER_4BYTES, offset += 4) {
+				final int i = CodecUtils.toInt(value, offset, 4);
+				fp = fp.add(BigDecimal.valueOf(i).movePointLeft(shift + DIGITS_PER_4BYTES));
+		}
+		if(shift < scale) {
+			final int i = CodecUtils.toInt(value, offset, DECIMAL_BINARY_SIZE[scale - shift]);
+				fp = fp.add(BigDecimal.valueOf(i).movePointLeft(scale));
+		}
 
-        //
-        return positive ? POSITIVE_ONE.multiply(ip.add(fp)) : NEGATIVE_ONE.multiply(ip.add(fp));
+		//
+		return positive ? POSITIVE_ONE.multiply(ip.add(fp)) : NEGATIVE_ONE.multiply(ip.add(fp));
 	}
 
 	/**
@@ -211,10 +211,10 @@ public final class MySQLUtils {
 	 */
 	public static int getDecimalBinarySize(int precision, int scale) {
 		final int x = precision - scale;
-        final int ipDigits = x / DIGITS_PER_4BYTES;
-        final int fpDigits = scale / DIGITS_PER_4BYTES;
-        final int ipDigitsX = x - ipDigits * DIGITS_PER_4BYTES;
-        final int fpDigitsX = scale - fpDigits * DIGITS_PER_4BYTES;
-        return (ipDigits << 2) + DECIMAL_BINARY_SIZE[ipDigitsX] + (fpDigits << 2) + DECIMAL_BINARY_SIZE[fpDigitsX];
-    }
+		final int ipDigits = x / DIGITS_PER_4BYTES;
+		final int fpDigits = scale / DIGITS_PER_4BYTES;
+		final int ipDigitsX = x - ipDigits * DIGITS_PER_4BYTES;
+		final int fpDigitsX = scale - fpDigits * DIGITS_PER_4BYTES;
+		return (ipDigits << 2) + DECIMAL_BINARY_SIZE[ipDigitsX] + (fpDigits << 2) + DECIMAL_BINARY_SIZE[fpDigitsX];
+	}
 }
