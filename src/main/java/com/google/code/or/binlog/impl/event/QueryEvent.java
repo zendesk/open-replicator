@@ -16,10 +16,12 @@
  */
 package com.google.code.or.binlog.impl.event;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.google.code.or.binlog.BinlogEventV4Header;
 import com.google.code.or.binlog.StatusVariable;
+import com.google.code.or.binlog.impl.parser.QueryEventParser;
 import com.google.code.or.common.glossary.column.StringColumn;
 import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
@@ -41,6 +43,8 @@ public final class QueryEvent extends AbstractBinlogEventV4 {
 	private List<StatusVariable> statusVariables;
 	private StringColumn databaseName;
 	private StringColumn sql;
+	private byte[] statusVariableBytes;
+	private boolean statusVariablesParsed;
 
 	/**
 	 *
@@ -112,12 +116,26 @@ public final class QueryEvent extends AbstractBinlogEventV4 {
 		this.statusVariablesLength = statusVariableLength;
 	}
 
-	public List<StatusVariable> getStatusVariables() {
+	public synchronized List<StatusVariable> getStatusVariables() {
+		if ( !statusVariablesParsed ) {
+			try {
+				if ( statusVariableBytes == null )
+					return null;
+
+				statusVariables = QueryEventParser.parseStatusVariables(statusVariableBytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			} finally {
+				statusVariablesParsed = true;
+			}
+		}
 		return statusVariables;
 	}
 
-	public void setStatusVariables(List<StatusVariable> statusVariables) {
+	public synchronized void setStatusVariables(List<StatusVariable> statusVariables) {
 		this.statusVariables = statusVariables;
+		this.statusVariablesParsed = true;
 	}
 
 	public StringColumn getDatabaseName() {
@@ -134,5 +152,10 @@ public final class QueryEvent extends AbstractBinlogEventV4 {
 
 	public void setSql(StringColumn sql) {
 		this.sql = sql;
+	}
+
+	public void setStatusVariableBytes(byte[] bytes) {
+		this.statusVariablesParsed = false;
+		this.statusVariableBytes = bytes;
 	}
 }
