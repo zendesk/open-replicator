@@ -173,15 +173,23 @@ public class OpenReplicatorTest {
 		List<Column> columns = row.getColumns();
 		for ( int i = 0; i < 6; i++ ) {
 			Column c = columns.get(i);
+
 			if ( c instanceof Timestamp2Column ) {
 				assertEquals(times[i], c.toString());
-	 		} else if ( c instanceof Datetime2Column ) {
+				Timestamp t = ((Timestamp2Column) c).getValue();
+				assertThat(t.getNanos(), is(not(0)));
+
+			} else if ( c instanceof Datetime2Column ) {
 	 			Timestamp ts = Timestamp.valueOf(times[i]);
-				assertEquals(ts.getTime(), ((Date) c.getValue()).getTime());
+				Timestamp ts2 = ((Datetime2Column) c).getTimestampValue();
+				assertEquals(ts, ts2);
+				assertThat(ts2.getNanos(), is(not(0)));
+
 			} else if ( c instanceof Time2Column ) {
-				Timestamp t = Timestamp.valueOf("1970-01-01 " + times[i]);
-				Time t2 = (Time) c.getValue();
-				assertEquals(t.getTime(), t2.getTime());
+				Timestamp ts = Timestamp.valueOf("1970-01-01 " + times[i]);
+				Timestamp ts2 = ((Time2Column) c).getTimestampValue();
+				assertEquals(ts, ts2);
+				assertThat(ts2.getNanos(), is(not(0)));
 			}
 		}
 	}
