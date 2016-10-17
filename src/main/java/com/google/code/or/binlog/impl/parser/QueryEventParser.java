@@ -71,7 +71,7 @@ public class QueryEventParser extends AbstractBinlogEventParser {
 		event.setDatabaseNameLength(is.readInt(1));
 		event.setErrorCode(is.readInt(2));
 		event.setStatusVariablesLength(is.readInt(2));
-		event.setStatusVariables(parseStatusVariables(is.readBytes(event.getStatusVariablesLength())));
+		event.setStatusVariableBytes(is.readBytes(event.getStatusVariablesLength()));
 		event.setDatabaseName(is.readNullTerminatedString());
 		event.setSql(is.readFixedLengthString(is.available()));
 		context.getEventListener().onEvents(event);
@@ -80,7 +80,7 @@ public class QueryEventParser extends AbstractBinlogEventParser {
 	/**
 	 *
 	 */
-	protected List<StatusVariable> parseStatusVariables(byte[] data)
+	public static List<StatusVariable> parseStatusVariables(byte[] data)
 	throws IOException {
 		final List<StatusVariable> r = new ArrayList<StatusVariable>();
 		final XDeserializer d = new XDeserializer(data);
