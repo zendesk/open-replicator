@@ -154,7 +154,7 @@ public final class QueryEvent extends AbstractBinlogEventV4 {
 		this.sql = sql;
 	}
 
-	public void setStatusVariableBytes(byte[] bytes) {
+	public synchronized void setStatusVariableBytes(byte[] bytes) {
 		this.statusVariablesParsed = false;
 		this.statusVariableBytes = bytes;
 	}
